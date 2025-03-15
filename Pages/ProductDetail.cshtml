@@ -1,0 +1,28 @@
+﻿@page "/productdetail/{id:int?}"
+@using WebAppTest.Models
+@using WebAppTest.Services
+@inject ProductServices Product
+@model ProductDetailModel
+@{
+    ViewData["Title"] = "Chi tiết sản phẩm";
+    var product = Product.GetProducts().ToList().Find(p => p.Id == Model.BookId);
+}
+
+<a class="btn btn-danger mb-2" asp-page="Index">Back</a>
+
+@if (product == null)
+{
+    <p>Không tìm thấy sản phẩm</p>
+    return;
+}
+<div class="row">
+    <div class="col col-4">
+        <img src="@product.Image" alt="@product.Name" class="img-fluid" />
+    </div>
+    <div class="col col-8">
+        <h1>@product.Name</h1>
+        <p>@product.Description</p>
+        <p>Giá: @product.Price</p>
+        <a href="https://www.google.com.vn" class="btn btn-primary">Mua</a>
+    </div>
+</div>

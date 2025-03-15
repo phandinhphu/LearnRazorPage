@@ -1,0 +1,16 @@
+﻿@using WebAppTest.Models
+@model Product
+@{
+}
+
+<div class="card my-4">
+    <a asp-page="/productdetail" asp-route-id="@Model.Id" style="text-decoration: none">
+        <div class="card-header">
+            <h3>@Model.Name</h3>
+        </div>
+    </a>
+    <div class="card-body">
+        <h5 class="card-text">Giá: @(Model.Price)$</h5>
+        <a asp-page="/productdetail" asp-route-id="@Model.Id" class="btn btn-primary">Buy</a>
+    </div>
+</div>

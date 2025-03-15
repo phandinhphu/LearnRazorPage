@@ -1,0 +1,37 @@
+﻿@using WebAppTest.Models
+@model Product
+
+<div class="mb-3">
+    <label for="product-id" class="form-label">Id</label>
+    <input 
+        type="text" 
+        class="form-control" 
+        name="id"
+        id="product-id" 
+        placeholder="Nhập id" 
+        value="@Model.Id">
+</div>
+<div class="mb-3">
+    <label for="product-name" class="form-label">Tên sản phẩm</label>
+    <input 
+        type="text" 
+        class="form-control" 
+        name="name" 
+        id="product-name" 
+        placeholder="Nhập tên sản phẩm"
+        value="@Model.Name">
+</div>
+<div class="mb-3">
+    <label for="description" class="form-label">Mô tả</label>
+    <textarea class="form-control" name="des" id="description" rows="3">@Model.Description</textarea>
+</div>
+<div class="mb-3">
+    <label for="price" class="form-label">Giá</label>
+    <input 
+        type="number" 
+        class="form-control" 
+        name="price" 
+        id="price" 
+        placeholder="Nhập giá sản phẩm"
+        value="@Model.Price">
+</div>

@@ -1,0 +1,23 @@
+﻿@page
+@using WebAppTest.Models
+@model IndexModel
+@{
+    ViewData["Title"] = "Trang chủ";
+
+    var products = Model.Products;
+}
+
+@* <partial name="_Message" /> *@
+
+@*
+<div class="row">
+    @foreach (var product in products)
+    {
+        <div class="col col-lg-3 col-md-4 col-12 mt-2">
+            <partial name="_ProductItem" model="product" />
+        </div>
+    }
+</div>
+*@
+
+@await Component.InvokeAsync("ProductBox", true)

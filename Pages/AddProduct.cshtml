@@ -1,0 +1,30 @@
+﻿@page "/add-new-product"
+@using WebAppTest.Models
+@model WebAppTest.Pages.AddProductModel
+@{
+    ViewData["Title"] = "Thêm sản phẩm";
+    var product = new Product
+    {
+        Id = 0,
+        Name = "",
+        Description = "",
+        Price = 0,
+    };
+}
+
+<h1>Thêm sản phẩm</h1>
+
+<a class="btn btn-danger" asp-page="Products">Back</a>
+
+@if (TempData["Message"] != null)
+{
+    ViewData["TitleContent"] = "Thông báo";
+    ViewData["Content"] = TempData["Message"];
+    ViewData["Type"] = TempData["Type"];
+    <partial name="_Message" />
+}
+
+<form class="mt-2" method="post">
+    <partial name="_FormProduct" model="product" />
+    <button type="submit" class="btn btn-primary">Thêm</button>
+</form>

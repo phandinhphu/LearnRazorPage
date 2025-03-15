@@ -1,0 +1,22 @@
+﻿@using WebAppTest.Models
+@model List<Product>
+
+@*
+<ul class="list-group">
+    @foreach (var product in Model)
+    {
+        <li class="list-group-item">
+            @product.Name (<strong>@product.Price</strong>)
+        </li>
+    }
+</ul>
+*@
+
+<div class="row">
+    @foreach (var product in Model)
+    {
+        <div class="col col-lg-3 col-md-4 col-12 mt-2">
+            <partial name="_ProductItem" model="product" />
+        </div>
+    }
+</div>
