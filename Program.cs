@@ -1,12 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using WebAppTest.Data;
 using WebAppTest.Services;
+using WebAppTest.Services.Intefaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddSingleton<ProductServices>();
+builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("DefaultConnection"),

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebAppTest.Models;
 using WebAppTest.Services;
 
 namespace WebAppTest.Pages.Components.ProductBox
@@ -7,26 +6,12 @@ namespace WebAppTest.Pages.Components.ProductBox
     public class ProductBox : ViewComponent
     {
         private readonly ProductServices _productServices;
-        public List<Product> Products { get; set; }
+        public List<Models.Product> Products { get; set; }
 
         public ProductBox(ProductServices productServices)
         {
             _productServices = productServices;
         }
-
-        //public IViewComponentResult Invoke(bool sort = true)
-        //{
-        //    if (sort)
-        //    {
-        //        Products = _productServices.GetProducts().OrderBy(p => p.Price).ToList();
-        //    }
-        //    else
-        //    {
-        //        Products = _productServices.GetProducts().OrderByDescending(p => p.Price).ToList();
-        //    }
-
-        //    return View(Products);
-        //}
 
         public async Task<IViewComponentResult> InvokeAsync(bool sort = true)
         {

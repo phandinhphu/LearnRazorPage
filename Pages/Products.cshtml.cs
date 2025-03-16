@@ -8,8 +8,8 @@ namespace WebAppTest.Pages
     public class ProductsModel : PageModel
     {
         private readonly ProductServices _productServices;
-        public List<Product> Products { get; private set; }
-        public Product? product { get; private set; }
+        public List<Models.Product> Products { get; private set; }
+        public Models.Product? product { get; private set; }
 
         [BindProperty(SupportsGet = true)]
         public string QueryString { get; set; } = string.Empty;

@@ -24,7 +24,7 @@ namespace WebAppTest.Pages
         {
             try
             {
-                _productServices.UpdateProduct(new Product()
+                _productServices.UpdateProduct(new Models.Product()
                 {
                     Id = Int32.Parse(id),
                     Name = name,

@@ -23,7 +23,7 @@ namespace WebAppTest.Pages
         {
             try
             {
-                Product product = new Product()
+                Models.Product product = new Models.Product()
                 {
                     Id = Int32.Parse(id),
                     Name = name,

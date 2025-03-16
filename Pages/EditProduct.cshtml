@@ -8,7 +8,7 @@
     var product = productServices.GetProducts().FirstOrDefault(p => p.Id == Model.Id);
     if (product == null)
     {
-        product = new Product
+        product = new Models.Product
         {
             Id = 0,
             Name = "",

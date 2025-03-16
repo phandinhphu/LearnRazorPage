@@ -10,7 +10,7 @@ public class IndexModel : PageModel
     private readonly ILogger<IndexModel> _logger;
     private readonly ProductServices _productServices;
 
-    public List<Product> Products { get; private set; }
+    public List<Models.Product> Products { get; private set; }
 
     public IndexModel(ILogger<IndexModel> logger, ProductServices productServices)
     {
