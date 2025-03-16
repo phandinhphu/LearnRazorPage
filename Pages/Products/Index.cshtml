@@ -1,0 +1,89 @@
+﻿@page
+@model WebAppTest.Pages_Product.IndexModel
+
+@{
+    ViewData["Title"] = "Danh sách sản phẩm";
+    int i = 0;
+}
+
+<div>
+    <h1>Danh sách sản phẩm</h1>
+    <a asp-page="Trash" class="btn btn-primary mb-4">Thùng rác (@Model.DeletedProductsCount)</a>
+</div>
+
+<p>
+    <a asp-page="Create" class="btn btn-primary">Thêm sản phẩm</a>
+</p>
+
+<form method="get" class="w-75">
+    <div class="input-group mt-2">
+        <input type="text" class="form-control mx-4" asp-for="QueryString" placeholder="Tìm kiếm sản phẩm" />
+        <div class="input-group-append mx-3">
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+        </div>
+        <div class="input-group-append">
+            <a asp-page="/Product/Index" class="btn btn-primary">Hủy</a>
+        </div>
+    </div>
+</form>
+
+<form method="post" asp-page-handler="action">
+    <div class="d-flex mt-4 text-align-center">
+        <div class="form-check form-check-inline d-flex align-items-center">
+            <input class="form-check-input me-2" type="checkbox" id="chose-all">
+            <label class="form-check-label" for="chose-all">Chọn tất cả</label>
+        </div>
+
+        <select id="select-action" class="form-select w-25 ms-2 me-2" aria-label="Default select example" name="action" required>
+            <option value="" selected>-- Hành động --</option>
+            <option value="clear">Xóa</option>
+        </select>
+
+        <button type="submit" id="btn-action" class="btn btn-primary disabled">Thực hiện</button>
+    </div>
+
+    <table class="table table-bordered mt-2">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">STT</th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.Product[0].Name)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.Product[0].Description)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.Product[0].Price)
+                </th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model.Product) {
+            <tr>
+                <td>
+                    <input type="checkbox" class="form-check-input" name="productsId[]" value="@item.Id" />
+                </td>
+                <td>
+                    @(++i)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+</form>
