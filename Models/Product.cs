@@ -17,5 +17,6 @@ namespace WebAppTest.Models
         public string? Image { get; set; }
         [Required(ErrorMessage = "Giá không được bỏ trống")]
         public decimal Price { get; set; }
+        public bool IsDeleted { get; set; } = false;
     }
 }

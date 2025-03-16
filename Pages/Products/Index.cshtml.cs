@@ -14,14 +14,13 @@ namespace WebAppTest.Pages_Product
 {
     public class IndexModel : PageModel
     {
-        private readonly WebAppTest.Data.ApplicationDbContext _context;
         private readonly IProductService _productService;
+        public int DeletedProductsCount { get; set; }
         [BindProperty(SupportsGet = true)]
         public string QueryString { get; set; } = string.Empty;
 
-        public IndexModel(WebAppTest.Data.ApplicationDbContext context, IProductService productService)
+        public IndexModel(IProductService productService)
         {
-            _context = context;
             _productService = productService;
         }
 
@@ -30,23 +29,21 @@ namespace WebAppTest.Pages_Product
         public async Task OnGetAsync()
         {
             Product = (await _productService.GetProductsAsync(QueryString)).ToList();
+            DeletedProductsCount = await _productService.GetDeletedProductsCountAsync();
         }
 
-        public IActionResult OnPostAction(int[] productsId, string action)
+        public async Task<IActionResult> OnPostActionAsync(int[] productsId, string action)
         {
-            //if (action == "clear")
-            //{
-            //    _productServices.ClearProducts(productsId);
-            //}
-            //else if (action == "restore")
-            //{
-            //    _productServices.RestoreProducts();
-            //}
+            if (action == "clear")
+            {
+                await _productService.SortDeleteProductAsync(productsId);
+            }
+            else if (action == "restore")
+            {
+                //await _productService.RestoreProductAsync();
+            }
 
-            Console.WriteLine(action);
-            productsId.ToList().ForEach(p => Console.WriteLine(p));
-
-            return new RedirectResult("/Product/Index");
+            return RedirectToPage();
         }
     }
 }

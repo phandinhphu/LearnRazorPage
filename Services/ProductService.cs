@@ -20,9 +20,29 @@ namespace WebAppTest.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task DestroyProductAsync(int id)
+        public async Task DestroyProductAsync(int[] id)
         {
-            throw new NotImplementedException();
+            var products = await _context.Products
+                                .IgnoreQueryFilters()
+                                .Where(p => id.Contains(p.Id))
+                                .ToListAsync();
+            _context.Products.RemoveRange(products);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Product>> GetDeletedProductsAsync(string name = "")
+        {
+            return await _context.Products
+                .IgnoreQueryFilters()
+                .Where(p => p.IsDeleted && p.Name.Contains(name))
+                .ToListAsync();
+        }
+
+        public async Task<int> GetDeletedProductsCountAsync()
+        {
+            return await _context.Products
+                .IgnoreQueryFilters()
+                .CountAsync(p => p.IsDeleted);
         }
 
         public async Task<Product> GetProductByIdAsync(int id)
@@ -41,12 +61,26 @@ namespace WebAppTest.Services
 
         public async Task RestoreProductAsync(int[] id)
         {
-            throw new NotImplementedException();
+            var products = await _context.Products
+                                .IgnoreQueryFilters()
+                                .Where(p => id.Contains(p.Id))
+                                .ToListAsync();
+
+            products.ForEach(p => p.IsDeleted = false);
+
+            await UpdateRangeProductsAsync(products);
         }
 
         public async Task SortDeleteProductAsync(int[] id)
         {
-            throw new NotImplementedException();
+            foreach (var i in id)
+            {
+                var product = await GetProductByIdAsync(i);
+                product.IsDeleted = true;
+                await UpdateProductAsync(product);
+            }
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateProductAsync(Product product)

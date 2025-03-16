@@ -7,7 +7,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddSingleton<ProductServices>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(

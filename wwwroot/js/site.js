@@ -5,13 +5,13 @@
 
 document.addEventListener('DOMContentLoaded', function () {
     const confirmDeleteModal = document.getElementById('confirmDeleteModal');
-    const formDelete = document.forms['form-delete'];
+    const formGeneral = document.forms['form-general'];
 
     const checkboxAll = $('#chose-all');
-    const selectTag = $('#select-action');
     const checkboxItems = $('input[name="productsId[]"]');
     const btnAction = $('#btn-action');
     const btnDelete = $('#btn-delete');
+    const btnsOperation = $('.btn-operation');
     var id;
 
     // Handle modal event
@@ -26,20 +26,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Handle form delete submit event
     btnDelete.click(() => {
-        formDelete.action = `/products/?handler=delete&id=${id}`;
-        formDelete.submit();
+        formGeneral.action = `/Products/Trash/?handler=Destroy&id=${id}`;
+        formGeneral.submit();
     });
 
-    // Handle select tag change event
-    selectTag.change(() => {
-        let action = selectTag.val();
+    // Handle button operation click event
+    btnsOperation.click((event) => {
+        let action = event.target.getAttribute('data-action');
+        let id = event.target.getAttribute('data-id');
 
-        if (action == 'restore') {
-            btnAction.removeClass('disabled');
-        } else {
-            rerenderBtnAction();
-        }
-    })
+        formGeneral.action = `/Products/Trash/?handler=${action}&id=${id}`;
+        formGeneral.submit();
+    });
 
     // Handle checkbox click event
     const rerenderBtnAction = () => {

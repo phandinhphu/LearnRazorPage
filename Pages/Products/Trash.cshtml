@@ -1,16 +1,15 @@
 ﻿@page
-@model WebAppTest.Pages_Product.IndexModel
+@model WebAppTest.Pages_Product.TrashModel
 
 @{
-    ViewData["Title"] = "Danh sách sản phẩm";
+    ViewData["Title"] = "Danh sách sản phẩm bị xóa";
     int i = 0;
 }
 
-<h1>Danh sách sản phẩm</h1>
-
-<p>
-    <a asp-page="Create" class="btn btn-primary">Thêm sản phẩm</a>
-</p>
+<div>
+    <h1>Thùng rác</h1>
+    <a asp-page="Index" class="btn btn-primary mb-4">Danh sách sản phẩm</a>
+</div>
 
 <form method="get" class="w-75">
     <div class="input-group mt-2">
@@ -33,8 +32,8 @@
 
         <select id="select-action" class="form-select w-25 ms-2 me-2" aria-label="Default select example" name="action" required>
             <option value="" selected>-- Hành động --</option>
-            <option value="clear">Xóa</option>
             <option value="restore">Khôi phục</option>
+            <option value="destroy">Xóa vĩnh viễn</option>
         </select>
 
         <button type="submit" id="btn-action" class="btn btn-primary disabled">Thực hiện</button>
@@ -55,33 +54,39 @@
                     @Html.DisplayNameFor(model => model.Product[0].Price)
                 </th>
                 <th scope="col"></th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
-    @foreach (var item in Model.Product) {
-            <tr>
-                <td>
+            @foreach (var item in Model.Product)
+            {
+                <tr>
+                    <td>
                         <input type="checkbox" class="form-check-input" name="productsId[]" value="@item.Id" />
-                </td>
-                <td>
-                    @(++i)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-    }
+                    </td>
+                    <td>
+                        @(++i)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td colspan="2">
+                        <button type="button" data-id="@item.Id" data-action="Restore" class="btn btn-primary btn-operation">Restore</button>
+                        <hr/>
+                        <button type="button" data-bs-id="@item.Id" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" class="btn btn-danger">Destroy</button>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 </form>
+
+<form method="post" name="form-general"></form>
+
+<partial name="_ConfirmModal" />

@@ -21,6 +21,9 @@ namespace WebAppTest.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // Apply global filter for soft delete
+            modelBuilder.Entity<Product>().HasQueryFilter(p => !p.IsDeleted);
         }
     }
 }

@@ -7,16 +7,17 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using WebAppTest.Data;
 using WebAppTest.Models;
+using WebAppTest.Services.Intefaces;
 
 namespace WebAppTest.Pages_Product
 {
     public class DeleteModel : PageModel
     {
-        private readonly WebAppTest.Data.ApplicationDbContext _context;
+        private readonly IProductService _productService;
 
-        public DeleteModel(WebAppTest.Data.ApplicationDbContext context)
+        public DeleteModel(IProductService productService)
         {
-            _context = context;
+            _productService = productService;
         }
 
         [BindProperty]
@@ -29,7 +30,7 @@ namespace WebAppTest.Pages_Product
                 return NotFound();
             }
 
-            var product = await _context.Products.FirstOrDefaultAsync(m => m.Id == id);
+            var product = await _productService.GetProductByIdAsync(id.Value);
 
             if (product is not null)
             {
@@ -48,13 +49,7 @@ namespace WebAppTest.Pages_Product
                 return NotFound();
             }
 
-            var product = await _context.Products.FindAsync(id);
-            if (product != null)
-            {
-                Product = product;
-                _context.Products.Remove(Product);
-                await _context.SaveChangesAsync();
-            }
+            await _productService.SortDeleteProductAsync(new[] { id.Value });
 
             return RedirectToPage("./Index");
         }

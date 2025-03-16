@@ -2,24 +2,25 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebAppTest.Models;
 using WebAppTest.Services;
+using WebAppTest.Services.Intefaces;
 
 namespace WebAppTest.Pages;
 
 public class IndexModel : PageModel
 {
     private readonly ILogger<IndexModel> _logger;
-    private readonly ProductServices _productServices;
+    private readonly IProductService _productService;
 
-    public List<Models.Product> Products { get; private set; }
+    public IList<Product> Products { get; private set; }
 
-    public IndexModel(ILogger<IndexModel> logger, ProductServices productServices)
+    public IndexModel(ILogger<IndexModel> logger, IProductService productServices)
     {
         _logger = logger;
-        _productServices = productServices;
+        _productService = productServices;
     }
 
-    public void OnGet()
+    public async Task OnGetAsync()
     {
-        Products = _productServices.GetProducts().ToList();
+        Products = (await _productService.GetProductsAsync()).ToList();
     }
 }
