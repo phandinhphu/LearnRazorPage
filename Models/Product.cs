@@ -9,13 +9,13 @@ namespace WebAppTest.Models
         [Key]
         public int Id { get; set; }
         [StringLength(100)]
-        [Required]
+        [Required(ErrorMessage = "Tên không được bỏ trống")]
         public required string Name { get; set; }
         [StringLength(500)]
         public required string Description { get; set; }
         [StringLength(500)]
         public string? Image { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Giá không được bỏ trống")]
         public decimal Price { get; set; }
     }
 }
