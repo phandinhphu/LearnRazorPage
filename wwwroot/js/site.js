@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const formGeneral = document.forms['form-general'];
 
     const checkboxAll = $('#chose-all');
-    const checkboxItems = $('input[name="productsId[]"]');
+    const checkboxProductsItems = $('input[name="productsId[]"]');
     const btnAction = $('#btn-action');
     const btnDelete = $('#btn-delete');
     const btnsOperation = $('.btn-operation');
@@ -40,9 +40,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Handle checkbox click event
-    const rerenderBtnAction = () => {
-        const checkedItems = $('input[name="productsId[]"]:checked');
-        if (checkedItems.length > 0) {
+    const rerenderBtnAction = (name) => {
+        const checkboxProductsItems = $(`input[name="${name}[]"]:checked`);
+        if (checkboxProductsItems.length > 0) {
             btnAction.removeClass('disabled');
         } else {
             btnAction.addClass('disabled');
@@ -50,13 +50,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     checkboxAll.change(() => {
-        checkboxItems.prop('checked', checkboxAll.prop('checked'));
-        rerenderBtnAction();
+        checkboxProductsItems.prop('checked', checkboxAll.prop('checked'));
+        rerenderBtnAction("productsId");
     })
 
-    checkboxItems.change(() => {
-        var isCheckAll = checkboxItems.length === checkboxItems.filter(':checked').length;
+    checkboxProductsItems.change(() => {
+        var isCheckAll = checkboxProductsItems.length === checkboxProductsItems.filter(':checked').length;
         checkboxAll.prop('checked', isCheckAll);
-        rerenderBtnAction();
+        rerenderBtnAction("productsId");
     })
 });

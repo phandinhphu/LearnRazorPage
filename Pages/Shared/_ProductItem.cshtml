@@ -10,7 +10,7 @@
         </div>
     </a>
     <div class="card-body">
-        <h5 class="card-text">Giá: @(Model.Price)$</h5>
+        <h5 class="card-text">Giá: @(Math.Round(Model.Price, 1))$</h5>
         <a asp-page="/Products/Details" asp-route-id="@Model.Id" class="btn btn-primary">Buy</a>
     </div>
 </div>
