@@ -1,0 +1,21 @@
+﻿version: "3.7"
+
+services:
+  xtlab-mssql:
+	image: mcr.microsoft.com/mssql/server:2019-latest
+	container_name: sqlserver-xtlab
+	restart: always
+	hostname: mssql
+	environment:
+		SA_PASSWORD: Password123
+		ACCEPT_EULA: Y
+		#Express
+	volumes:
+		- mssqlvolumes:/var/opt/mssql/data # Thu muc chua DB
+		- ./bk:/var/opt/mssql/backup # Thu muc chua backup
+	ports:
+		- "1433:1433"
+
+volumes:
+	mssqlvolumes:
+		name: sqlserver-xtlab-vl
