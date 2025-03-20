@@ -15,9 +15,11 @@ namespace WebAppTest.Pages_Product
     public class EditModel : PageModel
     {
         private readonly IProductService _productservice;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public EditModel(IProductService productService)
+        public EditModel(IWebHostEnvironment webHostEnvironment, IProductService productService)
         {
+            _webHostEnvironment = webHostEnvironment;
             _productservice = productService;
         }
 
@@ -42,7 +44,7 @@ namespace WebAppTest.Pages_Product
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more information, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(IFormFile? imgFile)
         {
             if (!ModelState.IsValid)
             {
@@ -51,6 +53,34 @@ namespace WebAppTest.Pages_Product
 
             try
             {
+                if (imgFile != null)
+                {
+                    if (!string.IsNullOrEmpty(Product.Image))
+                    {
+                        string oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, Product.Image);
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+
+                    string uploadFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "products");
+
+                    if (!Directory.Exists(uploadFolder))
+                    {
+                        Directory.CreateDirectory(uploadFolder);
+                    }
+
+                    string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(imgFile.FileName);
+                    string uploadPath = Path.Combine(uploadFolder, uniqueFileName);
+                    using (var fs = new FileStream(uploadPath, FileMode.Create))
+                    {
+                        await imgFile.CopyToAsync(fs);
+                    }
+
+                    Product.Image = "uploads/products/" + uniqueFileName;
+                }
+
                 await _productservice.UpdateProductAsync(Product);
             }
             catch (DbUpdateConcurrencyException)

@@ -14,9 +14,11 @@ namespace WebAppTest.Pages_Product
     public class CreateModel : PageModel
     {
         private readonly IProductService _productServices;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public CreateModel(IProductService productServices)
+        public CreateModel(IWebHostEnvironment webHostEnvironment,IProductService productServices)
         {
+            _webHostEnvironment = webHostEnvironment;
             _productServices = productServices;
         }
 
@@ -29,11 +31,31 @@ namespace WebAppTest.Pages_Product
         public Product Product { get; set; } = default!;
 
         // For more information, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(IFormFile? imgFile)
         {
             if (!ModelState.IsValid)
             {
                 return Page();
+            }
+
+            if (imgFile != null)
+            {
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imgFile.FileName);
+                var uploadForder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "products");
+
+                if (!Directory.Exists(uploadForder))
+                {
+                    Directory.CreateDirectory(uploadForder);
+                }
+
+                var uploadPath = Path.Combine(uploadForder, fileName);
+
+                using (var fs = new FileStream(uploadPath, FileMode.Create))
+                {
+                    await imgFile.CopyToAsync(fs);
+                }
+
+                Product.Image = "uploads/products/" + fileName;
             }
 
             await _productServices.AddProductAsync(Product);
