@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,32 +31,48 @@ namespace WebAppTest.Pages_Product
         public Product Product { get; set; } = default!;
 
         // For more information, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync(IFormFile? imgFile)
+        public async Task<IActionResult> OnPostAsync(List<IFormFile>? imgFiles)
         {
             if (!ModelState.IsValid)
             {
+                foreach (var entry in ModelState)
+                {
+                    foreach (var error in entry.Value.Errors)
+                    {
+                        Console.WriteLine($"Lỗi tại {entry.Key}: {error.ErrorMessage}");
+                    }
+                }
                 return Page();
             }
 
-            if (imgFile != null)
+            List<string> imgs = new List<string>();
+            if (imgFiles != null && imgFiles.Count > 0)
             {
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imgFile.FileName);
-                var uploadForder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "products");
-
-                if (!Directory.Exists(uploadForder))
+                foreach (var imgFile in imgFiles)
                 {
-                    Directory.CreateDirectory(uploadForder);
+                    if (imgFile != null)
+                    {
+                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imgFile.FileName);
+                        var uploadForder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "products");
+
+                        if (!Directory.Exists(uploadForder))
+                        {
+                            Directory.CreateDirectory(uploadForder);
+                        }
+
+                        var uploadPath = Path.Combine(uploadForder, fileName);
+
+                        using (var fs = new FileStream(uploadPath, FileMode.Create))
+                        {
+                            await imgFile.CopyToAsync(fs);
+                        }
+
+                        imgs.Add("uploads/products/" + fileName);
+                    }
                 }
-
-                var uploadPath = Path.Combine(uploadForder, fileName);
-
-                using (var fs = new FileStream(uploadPath, FileMode.Create))
-                {
-                    await imgFile.CopyToAsync(fs);
-                }
-
-                Product.Image = "uploads/products/" + fileName;
             }
+
+            _productServices.SetJsonSerializeProductImage(Product, imgs);
 
             await _productServices.AddProductAsync(Product);
 

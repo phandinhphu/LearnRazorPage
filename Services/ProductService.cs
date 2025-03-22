@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 using WebAppTest.Data;
 using WebAppTest.Models;
 using WebAppTest.Services.Intefaces;
@@ -8,9 +10,11 @@ namespace WebAppTest.Services
     public class ProductService : IProductService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductService(ApplicationDbContext context)
+        public ProductService(IWebHostEnvironment webHostEnvironment, ApplicationDbContext context)
         {
+            _webHostEnvironment = webHostEnvironment;
             _context = context;
         }
 
@@ -26,6 +30,24 @@ namespace WebAppTest.Services
                                 .IgnoreQueryFilters()
                                 .Where(p => id.Contains(p.Id))
                                 .ToListAsync();
+
+            products.ForEach(product =>
+            {
+                if (product.Image != null)
+                {
+                    var imgs = JsonSerializer.Deserialize<List<string>>(product.Image);
+                    if (imgs == null) return;
+                    foreach (var img in imgs)
+                    {
+                        var imgPath = Path.Combine(_webHostEnvironment.WebRootPath, img);
+                        if (File.Exists(imgPath))
+                        {
+                            File.Delete(imgPath);
+                        }
+                    }
+                }
+            });
+
             _context.Products.RemoveRange(products);
             await _context.SaveChangesAsync();
         }
@@ -45,13 +67,23 @@ namespace WebAppTest.Services
                 .CountAsync(p => p.IsDeleted);
         }
 
+        public List<string> GetJsonDeserializeProductImage(Product product)
+        {
+            return JsonSerializer.Deserialize<List<string>>(product.Image);
+        }
+
         public async Task<Product> GetProductByIdAsync(int id)
         {
-            return await _context.Products.FindAsync(id);
+            return await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<IEnumerable<Product>> GetProductsAsync(string name = "")
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                return await _context.Products.ToListAsync();
+            }
+
             var products = from p in _context.Products
                            where p.Name.Contains(name)
                            select p;
@@ -69,6 +101,11 @@ namespace WebAppTest.Services
             products.ForEach(p => p.IsDeleted = false);
 
             await UpdateRangeProductsAsync(products);
+        }
+
+        public void SetJsonSerializeProductImage(Product product, List<string> jsonImg)
+        {
+            product.Image = JsonSerializer.Serialize(jsonImg);
         }
 
         public async Task SortDeleteProductAsync(int[] id)

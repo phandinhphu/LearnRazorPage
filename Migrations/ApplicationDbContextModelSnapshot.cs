@@ -34,7 +34,8 @@ namespace WebAppTest.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
-                    b.Property<string>("Image")
+                    b.PrimitiveCollection<string>("Image")
+                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 

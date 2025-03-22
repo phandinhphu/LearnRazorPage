@@ -14,5 +14,7 @@ namespace WebAppTest.Services.Intefaces
         Task SortDeleteProductAsync(int[] id);
         Task RestoreProductAsync(int[] id);
         Task DestroyProductAsync(int[] id);
+        void SetJsonSerializeProductImage(Product product, List<string> jsonImg);
+        List<string> GetJsonDeserializeProductImage(Product product);
     }
 }

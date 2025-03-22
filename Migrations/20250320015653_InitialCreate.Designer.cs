@@ -11,8 +11,8 @@ using WebAppTest.Data;
 namespace WebAppTest.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250316062122_AddColumnIsDeleted")]
-    partial class AddColumnIsDeleted
+    [Migration("20250320015653_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,7 +37,8 @@ namespace WebAppTest.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
-                    b.Property<string>("Image")
+                    b.PrimitiveCollection<string>("Image")
+                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 

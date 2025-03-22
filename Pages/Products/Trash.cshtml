@@ -53,12 +53,19 @@
                 <th scope="col">
                     @Html.DisplayNameFor(model => model.Product[0].Price)
                 </th>
-                <th scope="col"></th>
-                <th scope="col"></th>
+                <th scope="col" colspan="2">Thao tác</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.Product)
+            @if (Model.Product.Count == 0)
+            {
+                <tr>
+                    <td colspan="6" class="text-center">Thùng rác trống</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var item in Model.Product)
             {
                 <tr>
                     <td>
@@ -77,11 +84,11 @@
                         @Html.DisplayFor(modelItem => item.Price)
                     </td>
                     <td colspan="2">
-                        <button type="button" data-id="@item.Id" data-action="Restore" class="btn btn-primary btn-operation">Restore</button>
-                        <hr/>
+                        <button type="button" data-id="@item.Id" data-action="Restore" class="btn btn-primary btn-operation mx-2">Restore</button>
                         <button type="button" data-bs-id="@item.Id" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" class="btn btn-danger">Destroy</button>
                     </td>
                 </tr>
+            }
             }
         </tbody>
     </table>

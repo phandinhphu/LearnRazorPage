@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using WebAppTest.Data;
 using WebAppTest.Models;
 using WebAppTest.Services.Intefaces;
@@ -25,6 +26,8 @@ namespace WebAppTest.Pages_Product
 
         [BindProperty]
         public Product Product { get; set; } = default!;
+        [BindProperty]
+        public List<IFormFile> Images { get; set; } = new List<IFormFile>();
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -44,42 +47,54 @@ namespace WebAppTest.Pages_Product
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more information, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync(IFormFile? imgFile)
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
+                foreach (var entry in ModelState)
+                {
+                    foreach (var error in entry.Value.Errors)
+                    {
+                        Console.WriteLine($"Lỗi tại {entry.Key}: {error.ErrorMessage}");
+                    }
+                }
+
                 return Page();
             }
 
             try
             {
-                if (imgFile != null)
+                Console.WriteLine(Product.Image);
+                Product product = await _productservice.GetProductByIdAsync(Product.Id);
+                Console.WriteLine(product);
+
+                List<string> imgs = new List<string>();
+                List<string> existImgs = _productservice.GetJsonDeserializeProductImage(product);
+
+                if (Images != null && Images.Count > 0)
                 {
-                    if (!string.IsNullOrEmpty(Product.Image))
+
+                    foreach (var imgFile in Images)
                     {
-                        string oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, Product.Image);
-                        if (System.IO.File.Exists(oldImagePath))
+                        string uploadFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "products");
+
+                        if (!Directory.Exists(uploadFolder))
                         {
-                            System.IO.File.Delete(oldImagePath);
+                            Directory.CreateDirectory(uploadFolder);
                         }
+
+                        string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(imgFile.FileName);
+                        string uploadPath = Path.Combine(uploadFolder, uniqueFileName);
+                        using (var fs = new FileStream(uploadPath, FileMode.Create))
+                        {
+                            await imgFile.CopyToAsync(fs);
+                        }
+
+                        imgs.Add("uploads/products/" + uniqueFileName);
                     }
-
-                    string uploadFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "products");
-
-                    if (!Directory.Exists(uploadFolder))
-                    {
-                        Directory.CreateDirectory(uploadFolder);
-                    }
-
-                    string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(imgFile.FileName);
-                    string uploadPath = Path.Combine(uploadFolder, uniqueFileName);
-                    using (var fs = new FileStream(uploadPath, FileMode.Create))
-                    {
-                        await imgFile.CopyToAsync(fs);
-                    }
-
-                    Product.Image = "uploads/products/" + uniqueFileName;
                 }
+                imgs.AddRange(existImgs);
+                _productservice.SetJsonSerializeProductImage(Product, imgs);
 
                 await _productservice.UpdateProductAsync(Product);
             }
