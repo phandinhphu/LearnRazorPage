@@ -1,8 +1,11 @@
 ﻿@page
+@using WebAppTest.Services.Intefaces
 @model WebAppTest.Pages_Product.DetailsModel
-
+@inject IProductService ProductService
 @{
     ViewData["Title"] = "Chi tiết sản phẩm";
+
+    var imgs = ProductService.GetJsonDeserializeProductImage(Model.Product);
 }
 
 <h1>Chi tiết sản phẩm</h1>
@@ -11,30 +14,40 @@
     <h4>Product</h4>
     <hr />
     <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Product.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Product.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.Image)
-        </dt>
-        <dd class="col-sm-10">
-            <img src="@Model.Product.Image" alt="Image" />
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Product.Price)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Product.Price)
-        </dd>
+        <div class="col-sm-4">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Product.Name)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Product.Name)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Product.Description)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Product.Description)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Product.Price)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Product.Price)
+            </dd>
+        </div>
+
+        <div class="col-sm-8">
+            <dt class="col-sm-12">
+                @Html.DisplayNameFor(model => model.Product.Image)
+            </dt>
+            <div class="row overflow-auto border p-3 mt-2" style="height: 400px;">
+                @foreach (var img in imgs)
+                {
+                    <div class="col-sm-6 mt-2">
+                        <img class="img-thumbnail" src="~/@img" alt="Image" />
+                    </div>
+                }
+            </div>
+        </div>
     </dl>
 </div>
 <div>

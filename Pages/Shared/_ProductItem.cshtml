@@ -1,15 +1,20 @@
 ﻿@using WebAppTest.Models
+@using WebAppTest.Services.Intefaces
 @model Product
+@inject IProductService ProductService
 @{
+    var imgs = ProductService.GetJsonDeserializeProductImage(Model);
 }
 
 <div class="card my-4">
-    <a asp-page="/Products/Details" asp-route-id="@Model.Id" style="text-decoration: none">
-        <div class="card-header">
-            <h3>@Model.Name</h3>
-        </div>
-    </a>
+    <img src="@imgs[0]" class="card-img-top" alt="@Model.Name">
     <div class="card-body">
+        <a asp-page="/Products/Details" asp-route-id="@Model.Id" style="text-decoration: none">
+            <div class="card-header">
+                <h3>@Model.Name</h3>
+            </div>
+        </a>
+        <p class="card-text">@Model.Description</p>
         <h5 class="card-text">Giá: @(Math.Round(Model.Price, 1))$</h5>
         <a asp-page="/Products/Details" asp-route-id="@Model.Id" class="btn btn-primary">Buy</a>
     </div>

@@ -1,8 +1,10 @@
 ﻿@page
+@using WebAppTest.Services.Intefaces
 @model WebAppTest.Pages_Product.EditModel
-
+@inject IProductService ProductService
 @{
     ViewData["Title"] = "Chỉnh sửa sản phẩm";
+    var imgs = ProductService.GetJsonDeserializeProductImage(Model.Product);
 }
 
 <h1>Edit</h1>
@@ -10,35 +12,52 @@
 <h4>Product</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form method="post" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Product.Id" />
-            <div class="form-group">
-                <span class="text-danger">*</span>
-                <label asp-for="Product.Name" class="control-label"></label>
-                <input asp-for="Product.Name" class="form-control" />
-                <span asp-validation-for="Product.Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+    <div class="col-sm-12">
+        <form class="row" method="post" enctype="multipart/form-data">
+            <div class="col-sm-4">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Product.Id" />
+                <div class="form-group">
+                    <span class="text-danger">*</span>
+                    <label asp-for="Product.Name" class="control-label"></label>
+                    <input asp-for="Product.Name" class="form-control" />
+                    <span asp-validation-for="Product.Name" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-2">
                 
-                <label asp-for="Product.Description" class="control-label"></label>
-                <input asp-for="Product.Description" class="form-control" />
-                <span asp-validation-for="Product.Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+                    <label asp-for="Product.Description" class="control-label"></label>
+                    <input asp-for="Product.Description" class="form-control" />
+                    <span asp-validation-for="Product.Description" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-2">
                 
-                <label class="control-label">Chọn ảnh</label>
-                <input type="file" name="imgFile" class="form-control" />
+                    <label class="control-label">Thêm ảnh</label>
+                    <span>(Nếu bạn không muốn thêm ảnh bỏ qua trường này)</span>
+                    <input id="add-img" type="file" name="Images" class="form-control" multiple />
+                </div>
+                <div class="form-group mt-2">
+                    <span class="text-danger">*</span>
+                    <label asp-for="Product.Price" class="control-label"></label>
+                    <input asp-for="Product.Price" class="form-control" />
+                    <span asp-validation-for="Product.Price" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-2">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
             </div>
-            <div class="form-group">
-                <span class="text-danger">*</span>
-                <label asp-for="Product.Price" class="control-label"></label>
-                <input asp-for="Product.Price" class="form-control" />
-                <span asp-validation-for="Product.Price" class="text-danger"></span>
-            </div>
-            <div class="form-group mt-2">
-                <input type="submit" value="Save" class="btn btn-primary" />
+
+            <div class="col-sm-8">
+                <div class="col-sm-12">
+                    @Html.DisplayNameFor(model => model.Product.Image)
+                </div>
+                <div class="row overflow-auto border p-3 mt-2" style="height: 400px;">
+                    @foreach (var img in imgs)
+                    {
+                        <div class="col-sm-6 mt-2">
+                            <img class="img-thumbnail" src="~/@img" alt="Image" />
+                        </div>
+                    }
+                </div>
             </div>
         </form>
     </div>
@@ -47,6 +66,26 @@
 <div>
     <a asp-page="./Index">Back to List</a>
 </div>
+
+<script>
+    const inputImg = document.getElementById('add-img');
+    inputImg.onchange = function () {
+        const files = inputImg.files;
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const html = `
+                    <div class="col-sm-6 mt-2">
+                        <img class="img-thumbnail" src="${e.target.result}" alt="Image" />
+                    </div>
+                `;
+                document.querySelector('.overflow-auto').innerHTML += html;
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

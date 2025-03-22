@@ -56,11 +56,19 @@
                 <th scope="col">
                     @Html.DisplayNameFor(model => model.Product[0].Price)
                 </th>
-                <th scope="col"></th>
+                <th scope="col">Thao tác</th>
             </tr>
         </thead>
         <tbody>
-    @foreach (var item in Model.Product) {
+            @if (Model.Product.Count == 0)
+            {
+                <tr>
+                    <td colspan="6" class="text-center">Không có sản phẩm nào. <a asp-page="Create">Thêm sản phẩm mới</a></td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var item in Model.Product) {
             <tr>
                 <td>
                     <input type="checkbox" class="form-check-input" name="productsId[]" value="@item.Id" />
@@ -84,6 +92,7 @@
                 </td>
             </tr>
     }
+            }
         </tbody>
     </table>
 </form>

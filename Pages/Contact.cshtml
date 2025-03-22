@@ -1,0 +1,56 @@
+﻿@page
+@model WebAppTest.Pages.ContactModel
+@{
+    ViewData["Title"] = "Contact";
+}
+
+<h2>Contact</h2>
+<p>Use this page to contact us.</p>
+<hr />
+
+<form class="bg-light p-2 m-2" method="post">
+    <div class="form-group">
+        <label asp-for="Contact.Id" class="control-label"></label>
+        <input asp-for="Contact.Id" class="form-control" />
+        <span asp-validation-for="Contact.Id" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Contact.FirstName" class="control-label"></label>
+        <input asp-for="Contact.FirstName" class="form-control" />
+        <span asp-validation-for="Contact.FirstName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Contact.LastName" class="control-label"></label>
+        <input asp-for="Contact.LastName" class="form-control" />
+        <span asp-validation-for="Contact.LastName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Contact.DateOfBirth" class="control-label"></label>
+        <input asp-for="Contact.DateOfBirth" class="form-control" />
+        <span asp-validation-for="Contact.DateOfBirth" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Contact.Email" class="control-label"></label>
+        <input asp-for="Contact.Email" class="form-control" />
+        <span asp-validation-for="Contact.Email" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Send</button>
+</form>
+
+<p>@Model.ThongBao</p>
+<div class="alert alert-@(Model.ThongBao == "Dữ liệu hợp lệ" ? "success" : "danger")">
+    <p>Thông tin contact</p>
+    <ul>
+        <li>ContactId: @Model.Contact.Id</li>
+        <li>FirstName: @Model.Contact.FirstName</li>
+        <li>LastName: @Model.Contact.LastName</li>
+        <li>DateOfBirth: @Model.Contact.DateOfBirth</li>
+        <li>Email: @Model.Contact.Email</li>
+    </ul>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

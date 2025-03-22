@@ -19,16 +19,16 @@
                 <input asp-for="Product.Name" class="form-control" />
                 <span asp-validation-for="Product.Name" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label asp-for="Product.Description" class="control-label"></label>
                 <input asp-for="Product.Description" class="form-control" />
                 <span asp-validation-for="Product.Description" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label class="control-label">Chọn ảnh</label>
-                <input type="file" name="imgFile" class="form-control" />
+                <input type="file" name="imgFiles" class="form-control" multiple />
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <span class="text-danger">*</span>
                 <label asp-for="Product.Price" class="control-label"></label>
                 <input asp-for="Product.Price" class="form-control" />
