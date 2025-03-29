@@ -73,7 +73,6 @@ namespace WebAppTest.Pages_Product
 
                 if (Images != null && Images.Count > 0)
                 {
-
                     foreach (var imgFile in Images)
                     {
                         string uploadFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "products");

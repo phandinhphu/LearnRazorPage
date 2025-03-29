@@ -2,9 +2,11 @@
 @using WebAppTest.Services.Intefaces
 @model WebAppTest.Pages_Product.EditModel
 @inject IProductService ProductService
+@inject ICategoryService CategoryService
 @{
     ViewData["Title"] = "Chỉnh sửa sản phẩm";
     var imgs = ProductService.GetJsonDeserializeProductImage(Model.Product);
+    var categories = CategoryService.GetCategoriesAsync().Result;
 }
 
 <h1>Edit</h1>
@@ -24,6 +26,17 @@
                     <span asp-validation-for="Product.Name" class="text-danger"></span>
                 </div>
                 <div class="form-group mt-2">
+                    <label asp-for="Product.CategoryId" class="control-label"></label>
+                    <select asp-for="Product.CategoryId" class="form-control">
+                        <option value="">Chọn danh mục</option>
+                        @foreach (var category in categories)
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-2">
                 
                     <label asp-for="Product.Description" class="control-label"></label>
                     <input asp-for="Product.Description" class="form-control" />
@@ -40,6 +53,11 @@
                     <label asp-for="Product.Price" class="control-label"></label>
                     <input asp-for="Product.Price" class="form-control" />
                     <span asp-validation-for="Product.Price" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-2">
+                    <label asp-for="Product.Stock" class="control-label"></label>
+                    <input asp-for="Product.Stock" class="form-control" />
+                    <span asp-validation-for="Product.Stock" class="text-danger"></span>
                 </div>
                 <div class="form-group mt-2">
                     <input type="submit" value="Save" class="btn btn-primary" />

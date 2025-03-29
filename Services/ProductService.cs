@@ -57,6 +57,7 @@ namespace WebAppTest.Services
             return await _context.Products
                 .IgnoreQueryFilters()
                 .Where(p => p.IsDeleted && p.Name.Contains(name))
+                .Include(p => p.Category)
                 .ToListAsync();
         }
 
@@ -74,21 +75,32 @@ namespace WebAppTest.Services
 
         public async Task<Product> GetProductByIdAsync(int id)
         {
-            return await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+            return await _context.Products.AsNoTracking()
+                    .Where(p => p.Id == id)
+                    .Include(p => p.Category)
+                    .FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<Product>> GetProductsAsync(string name = "")
         {
             if (string.IsNullOrEmpty(name))
             {
-                return await _context.Products.ToListAsync();
+                return await _context.Products.Include(p => p.Category).ToListAsync();
             }
 
             var products = from p in _context.Products
                            where p.Name.Contains(name)
                            select p;
 
-            return await products.ToListAsync();
+            return await products.Include(p => p.Category).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Product>> GetProductsByCategoryAsync(string name = "")
+        {
+            return await _context.Products
+                .Include(p => p.Category)
+                .Where(p => p.Category.Name.Contains(name))
+                .ToListAsync();
         }
 
         public async Task RestoreProductAsync(int[] id)

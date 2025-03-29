@@ -9,18 +9,18 @@ using WebAppTest.Data;
 using WebAppTest.Models;
 using WebAppTest.Services.Intefaces;
 
-namespace WebAppTest.Pages_Product
+namespace WebAppTest.Pages_Categories
 {
     public class DetailsModel : PageModel
     {
-        private readonly IProductService _productService;
+        private readonly ICategoryService _categoryService;
 
-        public DetailsModel(IProductService productService)
+        public DetailsModel(ICategoryService categoryService)
         {
-            _productService = productService;
+            _categoryService = categoryService;
         }
 
-        public Product Product { get; set; } = default!;
+        public Category Category { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -29,11 +29,11 @@ namespace WebAppTest.Pages_Product
                 return NotFound();
             }
 
-            var product = await _productService.GetProductByIdAsync(id.Value);
+            var category = await _categoryService.GetCategoryByIdAsync(id.Value);
 
-            if (product is not null)
+            if (category is not null)
             {
-                Product = product;
+                Category = category;
 
                 return Page();
             }

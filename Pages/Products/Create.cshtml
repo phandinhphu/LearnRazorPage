@@ -1,8 +1,10 @@
 ﻿@page
+@using WebAppTest.Services.Intefaces
 @model WebAppTest.Pages_Product.CreateModel
-
+@inject ICategoryService CategoryService
 @{
     ViewData["Title"] = "Thêm mới sản phẩm";
+    var categories = CategoryService.GetCategoriesAsync().Result;
 }
         
 <h1>Thêm mới</h1>
@@ -20,6 +22,17 @@
                 <span asp-validation-for="Product.Name" class="text-danger"></span>
             </div>
             <div class="form-group mt-2">
+                <label asp-for="Product.CategoryId" class="control-label"></label>
+                <select asp-for="Product.CategoryId" class="form-control">
+                    <option value="">Chọn danh mục</option>
+                    @foreach (var category in categories)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-2">
                 <label asp-for="Product.Description" class="control-label"></label>
                 <input asp-for="Product.Description" class="form-control" />
                 <span asp-validation-for="Product.Description" class="text-danger"></span>
@@ -33,6 +46,11 @@
                 <label asp-for="Product.Price" class="control-label"></label>
                 <input asp-for="Product.Price" class="form-control" />
                 <span asp-validation-for="Product.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-2">
+                <label asp-for="Product.Stock" class="control-label"></label>
+                <input asp-for="Product.Stock" class="form-control" />
+                <span asp-validation-for="Product.Stock" class="text-danger"></span>
             </div>
             <div class="form-group mt-2">
                 <input type="submit" value="Create" class="btn btn-primary" />

@@ -18,6 +18,8 @@ namespace WebAppTest.Pages_Product
         public int DeletedProductsCount { get; set; }
         [BindProperty(SupportsGet = true)]
         public string QueryString { get; set; } = string.Empty;
+        [BindProperty(SupportsGet = true)]
+        public string TypeSearch { get; set; } = string.Empty;
 
         public IndexModel(IProductService productService)
         {
@@ -28,7 +30,16 @@ namespace WebAppTest.Pages_Product
 
         public async Task OnGetAsync()
         {
-            Product = (await _productService.GetProductsAsync(QueryString)).ToList();
+            switch (TypeSearch)
+            {
+                case "category":
+                    Product = (await _productService.GetProductsByCategoryAsync(QueryString)).ToList();
+                    break;
+                default:
+                    Product = (await _productService.GetProductsAsync(QueryString)).ToList();
+                    break;
+            }
+
             DeletedProductsCount = await _productService.GetDeletedProductsCountAsync();
         }
 
