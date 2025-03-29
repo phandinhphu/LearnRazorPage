@@ -16,13 +16,37 @@
 </p>
 
 <form method="get" class="w-75">
-    <div class="input-group mt-2">
-        <input type="text" class="form-control mx-4" asp-for="QueryString" placeholder="Tìm kiếm sản phẩm" />
+    <div class="input-group align-items-center mt-2">
+        <div
+            class="input-group-append mx-4"
+            style="flex: 1;
+             display: flex;
+             background: white;
+             border: 1px solid #ced4da;
+             border-radius: 6px;
+             padding: 6px 8px;"
+        >
+            <input 
+                type="text" 
+                class="form-control mx-4" 
+                asp-for="QueryString" 
+                placeholder="Tìm kiếm sản phẩm"
+                style="border: none; background-color: transparent"
+                required
+            />
+            <div class="input-group">
+                <select class="form-select" asp-for="TypeSearch" required>
+                    <option value="" selected>-- Chọn kiểu lọc --</option>
+                    <option value="product">Tên sản phẩm</option>
+                    <option value="category">Danh mục</option>
+                </select>
+            </div>
+        </div>
         <div class="input-group-append mx-3">
             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
         </div>
         <div class="input-group-append">
-            <a asp-page="/Product/Index" class="btn btn-primary">Hủy</a>
+            <a href="/Products" class="btn btn-primary">Hủy</a>
         </div>
     </div>
 </form>
@@ -51,10 +75,13 @@
                     @Html.DisplayNameFor(model => model.Product[0].Name)
                 </th>
                 <th scope="col">
-                    @Html.DisplayNameFor(model => model.Product[0].Description)
+                    Category
                 </th>
                 <th scope="col">
                     @Html.DisplayNameFor(model => model.Product[0].Price)
+                </th>
+                <th scope="col">
+                    @Html.DisplayNameFor(model => model.Product[0].Stock)
                 </th>
                 <th scope="col">Thao tác</th>
             </tr>
@@ -80,10 +107,13 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Description)
+                    @Html.DisplayFor(modelItem => item.Category.Name)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Stock)
                 </td>
                 <td>
                     <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
@@ -91,7 +121,7 @@
                     <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
-    }
+                }
             }
         </tbody>
     </table>
