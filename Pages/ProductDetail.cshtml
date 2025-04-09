@@ -1,0 +1,63 @@
+﻿@page "/product-detail/{id:int:min(1)}"
+@using WebAppTest.Services.Intefaces
+@model WebAppTest.Pages.ProductDetailModel
+@inject IProductService ProductService
+@{
+    ViewData["Title"] = "Chi tiết sản phẩm";
+    Layout = "_Layout";
+
+    var imgs = ProductService.GetJsonDeserializeProductImage(Model.Product);
+}
+
+<div class="row">
+    <div class="col l-6 m-12 c-12">
+        <div class="product-detail__img"
+             style="background-image: url('/@imgs[0]')">
+        </div>
+        <div class="product-detail__img-list">
+            @foreach (var img in imgs)
+            {
+                <div class="product-detail__img-item @(imgs[0] == img ? "product-detail__img-item--select" : "")"
+                     style="background-image: url('/@img')"
+                     data-src="@img"
+                >
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col l-6 m-12 c-12">
+        <div class="product-detail__info">
+            <h1 class="product-detail__name">@Model.Product.Name</h1>
+            <div class="product-detail__desc">
+                <p>@Model.Product.Description</p>
+            </div>
+            <div class="product-detail__price">
+                <span>@Model.Product.Price.ToString("N0") đ</span>
+            </div>
+            <div class="product-detail__stock">
+                <span class="product-detail__stock--label">Tình trạng:</span>
+                <span class="product-detail__stock--value">@Model.Product.Stock</span>
+            </div>
+            <div class="product-detail__amount">
+                <span class="product-detail__amount--label">Số lượng:</span>
+                <input type="number" class="product-detail__amount--input" value="1" min="1" />
+            </div>
+            <div class="product-detail__btn">
+                <button class="btn btn--primary">Thêm vào giỏ hàng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const imgItems = document.querySelectorAll('.product-detail__img-item');
+    const imgMain = document.querySelector('.product-detail__img');
+
+    imgItems.forEach(item => {
+        item.addEventListener('click', () => {
+            imgItems.forEach(i => i.classList.remove('product-detail__img-item--select'));
+            item.classList.add('product-detail__img-item--select');
+            imgMain.style.backgroundImage = `url('/${item.getAttribute('data-src')}')`;
+        })
+    })
+</script>

@@ -1,10 +1,87 @@
 ﻿@page
 @using WebAppTest.Models
+@using WebAppTest.Services.Intefaces
 @model IndexModel
+@inject ICategoryService CategoryService
 @{
     ViewData["Title"] = "Trang chủ";
 
-    var products = Model.Products;
+    var categories = CategoryService.GetCategoriesAsync().Result.ToList();
 }
+<div class="row">
+    <div class="col l-2 m-0 c-0">
+        <partial name="Partial/Customer/_ListCategories" model="categories" />
+    </div>
 
-@await Component.InvokeAsync("ProductBox", true)
+    <div class="col l-10 m-12 c-12">
+        <div class="home-filter hide-on-mobile-tablet">
+            <span class="home-filter__label">Sắp xếp theo</span>
+            <button class="btn home-filter__btn">Phổ Biến</button>
+            <button class="btn home-filter__btn btn--primary">
+                Mới Nhất
+            </button>
+            <button class="btn home-filter__btn">Bán Chạy</button>
+
+            <div class="select-input">
+                <span class="select-input__label">Giá</span>
+                <i class="fa-solid fa-angle-down select-input__icon"></i>
+
+                <ul class="select-input__list">
+                    <li class="select-input__item">
+                        <a href="" class="select-input__link">Giá: Thấp đến cao</a>
+                    </li>
+
+                    <li class="select-input__item">
+                        <a href="" class="select-input__link">Giá: Cao đến thấp</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="home-product mgt-12">
+            @await Component.InvokeAsync("ProductBox", new { CategoryID = Model.CategoryID, QuerySearch = Model.QuerySearch, sort = true })
+        </div>
+
+        <ul class="pagination home-product__pagination">
+            <li class="pagination-item">
+                <a href="#" class="pagination-item__link">
+                    <i class="pagination-item__icon fas fa-angle-left"></i>
+                </a>
+            </li>
+
+            <li class="pagination-item pagination-item--active">
+                <a href="#" class="pagination-item__link">1</a>
+            </li>
+
+            <li class="pagination-item">
+                <a href="#" class="pagination-item__link">2</a>
+            </li>
+
+            <li class="pagination-item">
+                <a href="#" class="pagination-item__link">3</a>
+            </li>
+
+            <li class="pagination-item">
+                <a href="#" class="pagination-item__link">4</a>
+            </li>
+
+            <li class="pagination-item">
+                <a href="#" class="pagination-item__link">5</a>
+            </li>
+
+            <li class="pagination-item">
+                <a href="#" class="pagination-item__link">...</a>
+            </li>
+
+            <li class="pagination-item">
+                <a href="#" class="pagination-item__link">14</a>
+            </li>
+
+            <li class="pagination-item">
+                <a href="#" class="pagination-item__link">
+                    <i class="pagination-item__icon fas fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

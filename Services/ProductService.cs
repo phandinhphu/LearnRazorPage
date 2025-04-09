@@ -95,11 +95,11 @@ namespace WebAppTest.Services
             return await products.Include(p => p.Category).ToListAsync();
         }
 
-        public async Task<IEnumerable<Product>> GetProductsByCategoryAsync(string name = "")
+        public async Task<IEnumerable<Product>> GetProductsByCategoryAsync(int id = 0)
         {
             return await _context.Products
+                .Where(p => p.CategoryId == id)
                 .Include(p => p.Category)
-                .Where(p => p.Category.Name.Contains(name))
                 .ToListAsync();
         }
 

@@ -7,25 +7,34 @@ namespace WebAppTest.Pages.Components.ProductBox
     public class ProductBox : ViewComponent
     {
         private readonly IProductService _productService;
-        public List<Models.Product> Products { get; set; }
+        public List<Models.Product> Products { get; set; } = new List<Models.Product>();
 
         public ProductBox(IProductService productServices)
         {
             _productService = productServices;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(bool sort = true)
+        public async Task<IViewComponentResult> InvokeAsync(int CategoryID, string QuerySearch = "", bool sort = true)
         {
-            await Task.Delay(1000); // Đợi 1 giây
-
-            var products = await _productService.GetProductsAsync();
+            var products = CategoryID > 0 ?
+                            await _productService.GetProductsByCategoryAsync(CategoryID) :
+                            await _productService.GetProductsAsync();
             if (sort)
             {
-                Products = products.OrderBy(p => p.Price).ToList();
+                products = products.OrderBy(p => p.Price).ToList();
             }
             else
             {
-                Products = products.OrderByDescending(p => p.Price).ToList();
+                products = products.OrderByDescending(p => p.Price).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(QuerySearch))
+            {
+                Products = products.Where(p => p.Name.ToLower().Contains(QuerySearch.ToLower())).ToList();
+            }
+            else
+            {
+                Products = products.ToList();
             }
             return View(Products);
         }

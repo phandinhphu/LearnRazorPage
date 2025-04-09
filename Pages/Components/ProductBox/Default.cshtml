@@ -2,10 +2,19 @@
 @model List<Product>
 
 <div class="row">
-    @foreach (var product in Model)
+    @if (Model.Count == 0)
     {
-        <div class="col col-lg-3 col-md-4 col-12 mt-2">
-            <partial name="_ProductItem" model="product" />
+        <div class="col l-12 mgb-12 m-12 c-12">
+            <p>Không tìm thấy sản phẩm nào</p>
         </div>
+    }
+    else
+    {
+        @foreach (var product in Model)
+        {
+            <div class="col l-2-4 mgb-12 m-4 c-6">
+                <partial name="_ProductCard" model="product" />
+            </div>
+        }
     }
 </div>

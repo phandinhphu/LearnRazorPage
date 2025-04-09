@@ -6,7 +6,7 @@ namespace WebAppTest.Services.Intefaces
     {
         Task<IEnumerable<Product>> GetProductsAsync(string name = "");
         Task<IEnumerable<Product>> GetDeletedProductsAsync(string name = "");
-        Task<IEnumerable<Product>> GetProductsByCategoryAsync(string name = "");
+        Task<IEnumerable<Product>> GetProductsByCategoryAsync(int id = 0);
         Task<Product> GetProductByIdAsync(int id);
         Task<int> GetDeletedProductsCountAsync();
         Task AddProductAsync(Product product);
