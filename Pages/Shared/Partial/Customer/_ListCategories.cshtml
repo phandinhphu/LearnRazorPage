@@ -1,0 +1,42 @@
+﻿@using WebAppTest.Models
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model List<Category>
+@{
+    var id = 0;
+    try
+    {
+        Console.WriteLine("Category: " + Context.Request.Query["CategoryID"].FirstOrDefault());
+        id = Int32.Parse(Context.Request.Query["CategoryID"].FirstOrDefault() ?? "0");
+        Console.WriteLine(id);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+        id = 0;
+    }
+}
+
+<nav class="category">
+    <h3 class="category__heading">
+        <i class="category__heading-icon fa-solid fa-list-ul"></i>
+        Danh mục
+    </h3>
+
+    <ul class="category__list">
+        <li class="category__item @(id == 0 ? "category__item--active" : "")">
+            <a asp-page="Index" class="category__item-link">Tất cả</a>
+        </li>
+        @foreach (var category in Model)
+        {
+            <li class="category__item @(id == category.Id ? "category__item--active" : "")">
+                <a 
+                    asp-page="Index" 
+                    asp-route-CategoryID="@category.Id"
+                   class="category__item-link"
+                >@category.Name</a>
+            </li>
+        }
+    </ul>
+</nav>

@@ -13,14 +13,20 @@ public class IndexModel : PageModel
 
     public IList<Product> Products { get; private set; }
 
+    [BindProperty(SupportsGet = true)]
+    public int CategoryID { get; set; }
+    [BindProperty(SupportsGet = true)]
+    public string QuerySearch { get; set; }
+
     public IndexModel(ILogger<IndexModel> logger, IProductService productServices)
     {
         _logger = logger;
         _productService = productServices;
     }
 
-    public async Task OnGetAsync()
+    public async Task<IActionResult> OnGetAsync()
     {
         Products = (await _productService.GetProductsAsync()).ToList();
+        return Page();
     }
 }

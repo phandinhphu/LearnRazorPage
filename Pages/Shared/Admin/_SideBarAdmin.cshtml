@@ -1,0 +1,52 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="sidebar">
+    <div class="sidebar__content">
+        <ul class="sidebar__items">
+            <li class="sidebar__item">
+                <a class="sidebar__item-link"
+                   href="/">Dashboard</a>
+            </li>
+            <li class="sidebar__item">
+                <div class="sidebar__item-link">
+                    Thùng rác
+                    <i class="fa-solid fa-caret-right icon no-rotate"></i>
+                </div>
+                <ul class="sidebar__sub-items">
+                    <li class="sidebar__sub-item">
+                        <a class="sidebar__sub-item-link"
+                           asp-page="/Admin/Categories/Trash">Category</a>
+                    </li>
+                    <li class="sidebar__sub-item">
+                        <a class="sidebar__sub-item-link"
+                           asp-page="/Admin/Products/Trash">Product</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="sidebar__item">
+                <div class="sidebar__item-link">
+                    Quản lý sản phẩm
+                    <i class="fa-solid fa-caret-right icon no-rotate"></i>
+                </div>
+                <ul class="sidebar__sub-items">
+                    <li class="sidebar__sub-item">
+                        <a class="sidebar__sub-item-link"
+                           asp-page="/Admin/Categories/Index">Manager category</a>
+                    </li>
+                    <li class="sidebar__sub-item">
+                        <a class="sidebar__sub-item-link"
+                           asp-page="/Admin/Products/Index">Manager product</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="sidebar__item">
+                <a
+                    class="sidebar__item-link"
+                    href="/">Logout</a>
+            </li>
+        </ul>
+    </div>
+</div>

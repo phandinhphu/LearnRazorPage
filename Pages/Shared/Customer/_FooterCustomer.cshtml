@@ -1,0 +1,110 @@
+﻿@using WebAppTest.Services.Intefaces
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@inject ICategoryService CategoryService
+@{
+    var categories = CategoryService.GetCategoriesAsync().Result.ToList();
+}
+<footer class="footer">
+    <div class="grid wide">
+        <div class="row">
+            <div class="col l-2-4 m-6 c-12">
+                <h3 class="footer__heading">Chăm sóc khách hàng</h3>
+                <ul class="footer-list">
+                    <li class="footer-item">
+                        <a href="#" class="footer-item__link">Trung tâm trợ giúp</a>
+                    </li>
+                    <li class="footer-item">
+                        <a href="#" class="footer-item__link">Shopee Mail</a>
+                    </li>
+                    <li class="footer-item">
+                        <a href="#" class="footer-item__link">Hướng dẫn mua hàng</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col l-2-4 m-6 c-12">
+                <h3 class="footer__heading">Về TickID</h3>
+                <ul class="footer-list">
+                    <li class="footer-item">
+                        <a href="#" class="footer-item__link">Giới thiệu về TickID Việt Nam</a>
+                    </li>
+                    <li class="footer-item">
+                        <a href="#" class="footer-item__link">Tuyển Dụng</a>
+                    </li>
+                    <li class="footer-item">
+                        <a href="#" class="footer-item__link">Điều khoản TickID</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col l-2-4 m-6 c-12">
+                <h3 class="footer__heading">Danh mục</h3>
+                <ul class="footer-list">
+                    @foreach (var category in categories)
+                    {
+                        <li class="footer-item">
+                            <a asp-page="Index" asp-route-CategoryID="@category.Id" class="footer-item__link">@category.Name</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+            <div class="col l-2-4 m-6 c-12">
+                <h3 class="footer__heading">Theo dõi</h3>
+                <ul class="footer-list">
+                    <li class="footer-item">
+                        <a href="#" class="footer-item__link">
+                            <i class="footer-item__icon fa-brands fa-facebook"></i>
+                            Facebook
+                        </a>
+                    </li>
+                    <li class="footer-item">
+                        <a href="#" class="footer-item__link">
+                            <i class="footer-item__icon fa-brands fa-instagram"></i>
+                            Instagram
+                        </a>
+                    </li>
+                    <li class="footer-item">
+                        <a href="#" class="footer-item__link">
+                            <i class="footer-item__icon fa-brands fa-linkedin"></i>
+                            LinkedIn
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col l-2-4 m-12 c-12">
+                <h3 class="footer__heading">Vào cửa hàng trên ứng dụng</h3>
+                <div class="footer__download">
+                    <img src="./assets/img/NavbarQR/QRCodeDownload.png"
+                         alt="Qr code"
+                         class="footer__download-qr" />
+                    <div class="footer__download-apps">
+                        <a href="#" class="footer__download-app-link">
+                            <img src="./assets/img/NavbarQR/google_play.png"
+                                 alt="Qoogle play"
+                                 class="footer__download-app-img" />
+                        </a>
+                        <a href="#" class="footer__download-app-link">
+                            <img src="./assets/img/NavbarQR/app_store.png"
+                                 alt="App store"
+                                 class="footer__download-app-img" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer__bottom">
+        <div class="grid wide">
+            <div class="row">
+                <p class="col l-12 c-12 footer__text">
+                    2023 - Bản quyền thuộc về Công ty Shopee
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>

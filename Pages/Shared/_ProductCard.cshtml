@@ -1,0 +1,27 @@
+﻿@using WebAppTest.Models
+@using WebAppTest.Services.Intefaces
+@model Product
+@inject IProductService ProductService
+@{
+    var imgs = ProductService.GetJsonDeserializeProductImage(Model);
+}
+
+<a asp-page="ProductDetail" asp-route-id="@Model.Id" class="home-product-item">
+    <div class="home-product-item__img"
+            style="background-image: url('/@imgs[0]');
+            ">
+    </div>
+    <h4 class="home-product-item__name">
+        @Model.Name
+    </h4>
+    <div class="home-product-item__price">
+        <span class="home-product-item__price-current">@Model.Price.ToString("N0") đ</span>
+    </div>
+    <div class="home-product-item__action">
+        <span class="home-product-item__sold">88 đã bán</span>
+    </div>
+    @* <div class="home-product-item__origin"> *@
+    @*     <span class="home-product-item__brand">Whoo</span> *@
+    @*     <span class="home-product-item__orgin-name">Nhật Bản</span> *@
+    @* </div> *@
+</a>
