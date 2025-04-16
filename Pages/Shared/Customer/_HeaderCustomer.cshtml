@@ -1,4 +1,11 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Authorization
+@using WebAppTest.Models
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+@inject IAuthorizationService AuthorizationService
+@{
+    var isAdmin = AuthorizationService.AuthorizeAsync(User, "Admin").Result;
     var CategoryID = Context.Request.Query["CategoryID"];
 }
 
@@ -140,39 +147,45 @@
                 </li>
 
                 <!-- Khi chưa đăng nhập -->
-                <!--<li
-                class="navbar__item navbar__item--bold navbar__item--separate js-dang-ky"
-                >
-                Đăng ký
-                </li>
-                <li class="navbar__item navbar__item--bold js-dang-nhap">
-                Đăng nhập
-                </li> -->
-                <!-- Khi đăng nhập -->
-                <li class="navbar__item navbar__item-user">
-                    <img src="./assets/img/user_img.png"
-                    alt="User img"
-                    class="navbar__item-user-img" />
-                    <span class="navbar__item-user-name">Phan Đình Phú</span>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <li class="navbar__item navbar__item-user">
+                        <img src="./assets/img/user_img.png"
+                             alt="User img"
+                             class="navbar__item-user-img" />
+                        <span class="navbar__item-user-name">@UserManager.GetUserName(User)</span>
 
-                    <ul class="navbar__item-user-menu">
-                        <li class="navbar__item-user-item">
-                            <a href="">Tài khoản của tôi</a>
-                        </li>
+                        <ul class="navbar__item-user-menu">
+                            @if (isAdmin.Succeeded)
+                            {
+                                <li class="navbar__item-user-item">
+                                    <a asp-page="/Admin/Index">Trang quản trị</a>
+                                </li>
+                            }
+                            <li class="navbar__item-user-item">
+                                <a asp-area="Identity" asp-page="/Account/Manage/Index">Tài khoản của tôi</a>
+                            </li>
 
-                        <li class="navbar__item-user-item">
-                            <a href="">Địa chỉ của tôi</a>
-                        </li>
+                            <li class="navbar__item-user-item">
+                                <a href="">Đơn mua</a>
+                            </li>
 
-                        <li class="navbar__item-user-item">
-                            <a href="">Đơn mua</a>
-                        </li>
-
-                        <li class="navbar__item-user-item navbar__item-user-item--separate">
-                            <a href="">Đăng xuất</a>
-                        </li>
-                    </ul>
-                </li>
+                            <li class="navbar__item-user-item navbar__item-user-item--separate">
+                                <a asp-area="Identity" asp-page="/Account/Logout">Đăng xuất</a>
+                            </li>
+                        </ul>
+                    </li>
+                } else
+                {
+                    <li
+                        class="navbar__item navbar__item--bold navbar__item--separate"
+                    >
+                        <a class="navbar__item navbar__item--bold" asp-area="Identity" asp-page="/Account/Register">Đăng ký</a>
+                    </li>
+                    <li class="navbar__item navbar__item--bold">
+                        <a class="navbar__item navbar__item--bold" asp-area="Identity" asp-page="/Account/Login">Đăng nhập</a>
+                    </li>
+                }
             </ul>
         </nav>
 

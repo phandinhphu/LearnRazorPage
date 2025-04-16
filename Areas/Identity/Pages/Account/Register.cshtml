@@ -1,0 +1,65 @@
+﻿@page "/dang-ky/"
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="modal open">
+    <div class="modal__overlay"></div>
+    <div class="modal__body">
+        <section>
+            <form class="auth-form" id="account" method="post">
+                <div class="auth-form__container">
+                    <div class="auth-form__header">
+                        <a class="auth-form__switch-btn" asp-page="./Login">Login</a>
+                        <h3 class="auth-form__heading">Register</h3>
+                    </div>
+                    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+                    <div class="auth-form__form">
+                        <div class="auth-form__form">
+                            <input asp-for="Input.UserName" class="auth-form__input" autocomplete="username" aria-required="true" placeholder="Nguyen Van A" />
+                            <span asp-validation-for="Input.UserName" class="text-danger"></span>
+                        </div>
+                        <div class="auth-form__form">
+                            <input asp-for="Input.Email" class="auth-form__input" autocomplete="email" aria-required="true" placeholder="name@exemple.com" />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Password" class="auth-form__input" autocomplete="new-password" aria-required="true" placeholder="password" />
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.ConfirmPassword" class="auth-form__input" autocomplete="new-password" aria-required="true" placeholder="confirm password" />
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="auth-form__controls">
+                        <a asp-page="Pages/Index" class="btn btn--normal">Trang chủ</a>
+                        <button id="registerSubmit" type="submit" class="btn btn--primary mgl-8">Register</button>
+                    </div>
+                </div>
+            </form>
+            @{
+                if ((Model.ExternalLogins?.Count ?? 0) != 0)
+                {
+                    <form class="auth-form__socials" id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                        <div>
+                            <p>
+                                @foreach (var provider in Model.ExternalLogins!)
+                                {
+                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                }
+                            </p>
+                        </div>
+                    </form>
+                }
+            }
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

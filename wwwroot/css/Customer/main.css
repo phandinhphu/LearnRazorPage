@@ -1,5 +1,9 @@
 ﻿.app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
     overflow: hidden;
+    overflow-y: scroll;
 }
 
 .header {
@@ -421,6 +425,12 @@
     border: 1px solid var(--border-color);
     border-radius: 2px;
     outline: none;
+}
+
+.auth-form__input--check {
+    width: 20px;
+    margin-top: 20px;
+    cursor: pointer;
 }
 
 .auth-form__input:focus {
@@ -917,6 +927,7 @@
 
 /* App container */
 .app__container {
+    flex: 1;
     background-color: #f5f5f5;
 }
 
@@ -1482,4 +1493,40 @@ i.home-product-item__like-icon-fill {
     font-size: 12px;
     text-align: center;
     color: #737373;
+}
+
+/* Form */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.form-group__input {
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.form-group__label {
+    margin-bottom: 5px;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.form__input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.form__input:hover {
+    border-color: var(--primary-color);
+}
+
+/* Profile user */
+.profile-form {
+    display: flex;
+    align-items: center;
+    padding: 16px 0;
 }

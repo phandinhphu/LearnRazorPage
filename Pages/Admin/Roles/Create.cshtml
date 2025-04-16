@@ -1,0 +1,37 @@
+﻿@page "/admin/roles/create"
+@model WebAppTest.Admin.Pages_Roles.CreateModel
+@{
+    ViewData["Title"] = "Create Role";
+    Layout = "_LayoutAdmin";
+}
+
+<h1>Create Role</h1>
+
+<h4>Role</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <span class="text-danger">*</span>
+                <label asp-for="Input.RoleName" class="control-label"></label>
+                <input asp-for="Input.RoleName" class="form-control" />
+                <span asp-validation-for="Input.RoleName" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-2">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

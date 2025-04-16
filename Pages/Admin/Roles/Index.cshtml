@@ -1,0 +1,41 @@
+﻿@page "/admin/roles"
+@model WebAppTest.Admin.Pages_Roles.IndexModel
+@{
+    ViewData["Title"] = "Roles";
+    Layout = "_LayoutAdmin";
+}
+
+<div>
+    <h1>Danh sách vai trò</h1>
+</div>
+
+<p>
+    <a asp-page="Create" class="btn btn-primary">Tạo vai trò mới</a>
+</p>
+
+<table class="table table-bordered mt-2">
+    <thead>
+        <tr>
+            <th>Vai trò</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var role in Model.Roles)
+        {
+            <tr>
+                <td>
+                    <p>@role.Name</p>
+                    @foreach (var claim in role.Claims)
+                    {
+                        <small>@claim</small><br />
+                    }
+                </td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@role.Id" class="btn btn-primary">Edit</a>
+                    <a asp-page="Delete" asp-route-id="@role.Id" class="btn btn-primary">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

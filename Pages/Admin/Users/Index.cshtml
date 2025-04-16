@@ -1,0 +1,52 @@
+﻿@page "/admin/users"
+@model WebAppTest.Admin.Pages_Users.IndexModel
+@{
+    ViewData["Title"] = "Users";
+    Layout = "_LayoutAdmin";
+}
+
+<div>
+    <h1>Danh sách người dùng</h1>
+</div>
+<p>
+    <a asp-page="Create" class="btn btn-primary">Tạo người dùng mới</a>
+</p>
+
+<table class="table table-border">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].Roles)
+            </th>
+            <th>Tác vụ</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => user.UserName)
+                </td>
+                @if (string.IsNullOrEmpty(user.Roles))
+                {
+                    <td>
+                        <a asp-page="AddRole" asp-route-id="@user.Id">+Thêm vai trò</a>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <a asp-page="AddRole" asp-route-id="@user.Id">@user.Roles</a>
+                    </td>
+                }
+                <td>
+                    <a asp-page="SetPassword" asp-route-id="@user.Id">Set pw</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
