@@ -44,6 +44,12 @@ namespace WebAppTest.Data
                         .WithMany(c => c.Products)
                         .HasForeignKey(p => p.CategoryId)
                         .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Product>()
+                        .HasOne(p => p.User)
+                        .WithMany(u => u.Products)
+                        .HasForeignKey(p => p.UserId)
+                        .OnDelete(DeleteBehavior.Cascade);
             #endregion
 
             #region Category

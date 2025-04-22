@@ -1,5 +1,7 @@
-﻿@using WebAppTest.Models
-@model List<Product>
+﻿@using WebAppTest.Helpers
+@using WebAppTest.Models
+@model PaginatedList<Product>
+
 
 <div class="row">
     @if (Model.Count == 0)

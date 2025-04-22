@@ -11,6 +11,7 @@ namespace WebAppTest.Models
         public int Id { get; set; }
 
         public int CategoryId { get; set; }
+        public string? UserId { get; set; }
 
         [StringLength(100)]
         [Required(ErrorMessage = "Tên không được bỏ trống")]
@@ -33,5 +34,6 @@ namespace WebAppTest.Models
         public bool IsDeleted { get; set; } = false;
 
         public Category? Category { get; set; }
+        public User? User { get; set; }
     }
 }

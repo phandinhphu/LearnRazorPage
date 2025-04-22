@@ -8,19 +8,32 @@ using WebAppTest.Models;
 using WebAppTest.Services;
 using WebAppTest.Services.Intefaces;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Authorization;
+using WebAppTest.Authorization.Product_Requirements;
 
 var builder = WebApplication.CreateBuilder(args);
 var mailSettings = builder.Configuration.GetSection("MailSettings");
 
 // Add services to the container.
 builder.Services.AddOptions();
+
+// Add SendMailService
 builder.Services.Configure<MailSettings>(mailSettings);
 builder.Services.AddTransient<SendMailService>();
 builder.Services.AddTransient<ISendMailService>(sp => sp.GetRequiredService<SendMailService>());
 builder.Services.AddTransient<IEmailSender>(sp => sp.GetRequiredService<SendMailService>());
+
+// Add Resource-Base Authorization
+builder.Services.AddScoped<IAuthorizationHandler, ProductOwnerHandler>();
+
+// Add other services
 builder.Services.AddRazorPages();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -116,9 +129,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
+app.MapControllers();
 
 app.Run();

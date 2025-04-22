@@ -25,7 +25,8 @@
             }
         </div>
     </div>
-    <div class="col l-6 m-12 c-12">
+    <form asp-page-handler="AddToCart" class="col l-6 m-12 c-12">
+        <input type="hidden" name="productId" value="@Model.Product.Id" />
         <div class="product-detail__info">
             <h1 class="product-detail__name">@Model.Product.Name</h1>
             <div class="product-detail__desc">
@@ -40,13 +41,13 @@
             </div>
             <div class="product-detail__amount">
                 <span class="product-detail__amount--label">Số lượng:</span>
-                <input type="number" class="product-detail__amount--input" value="1" min="1" />
+                <input type="number" name="quantity" class="product-detail__amount--input" value="1" min="1" />
             </div>
             <div class="product-detail__btn">
                 <button class="btn btn--primary">Thêm vào giỏ hàng</button>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 <script>

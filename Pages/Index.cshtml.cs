@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using WebAppTest.Helpers;
 using WebAppTest.Models;
 using WebAppTest.Services;
 using WebAppTest.Services.Intefaces;
@@ -11,7 +12,9 @@ public class IndexModel : PageModel
     private readonly ILogger<IndexModel> _logger;
     private readonly IProductService _productService;
 
-    public IList<Product> Products { get; private set; }
+    public PaginatedList<Product> Products { get; private set; }
+    [BindProperty(SupportsGet = true)]
+    public int PageIndex { get; set; } = 1;
 
     [BindProperty(SupportsGet = true)]
     public int CategoryID { get; set; }
@@ -26,7 +29,8 @@ public class IndexModel : PageModel
 
     public async Task<IActionResult> OnGetAsync()
     {
-        Products = (await _productService.GetProductsAsync()).ToList();
+        Products = await _productService.GetProductsAsync(CategoryID, QuerySearch, PageIndex, 20);
+
         return Page();
     }
 }

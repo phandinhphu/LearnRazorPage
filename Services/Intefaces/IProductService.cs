@@ -1,10 +1,11 @@
-﻿using WebAppTest.Models;
+﻿using WebAppTest.Helpers;
+using WebAppTest.Models;
 
 namespace WebAppTest.Services.Intefaces
 {
     public interface IProductService
     {
-        Task<IEnumerable<Product>> GetProductsAsync(string name = "");
+        Task<PaginatedList<Product>> GetProductsAsync(int? categoryID, string name = "", int pageIndex = 1, int pageSize = 20);
         Task<IEnumerable<Product>> GetDeletedProductsAsync(string name = "");
         Task<IEnumerable<Product>> GetProductsByCategoryAsync(int id = 0);
         Task<Product> GetProductByIdAsync(int id);

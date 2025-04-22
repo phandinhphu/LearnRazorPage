@@ -732,11 +732,11 @@
 
 .navbar__cart-no-cart-img {
     width: 54%;
-    display: none;
+    display: block;
 }
 
 .navbar__cart-list-no-cart-msg {
-    display: none;
+    display: block;
     font-size: 14px;
     margin-top: 12px;
     color: var(--text-color);

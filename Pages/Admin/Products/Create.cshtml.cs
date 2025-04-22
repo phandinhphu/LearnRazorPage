@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,15 +13,22 @@ using WebAppTest.Services.Intefaces;
 
 namespace WebAppTest.Admin.Pages_Product
 {
+    [Authorize(Policy = "Admin")]
     public class CreateModel : PageModel
     {
         private readonly IProductService _productServices;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly UserManager<User> _userManager;
 
-        public CreateModel(IWebHostEnvironment webHostEnvironment,IProductService productServices)
+        public CreateModel(
+            IWebHostEnvironment webHostEnvironment,
+            IProductService productServices,
+            UserManager<User> userManager
+        )
         {
             _webHostEnvironment = webHostEnvironment;
             _productServices = productServices;
+            _userManager = userManager;
         }
 
         public IActionResult OnGet()
@@ -72,6 +81,7 @@ namespace WebAppTest.Admin.Pages_Product
                 }
             }
 
+            Product.UserId = _userManager.GetUserId(User);
             _productServices.SetJsonSerializeProductImage(Product, imgs);
 
             await _productServices.AddProductAsync(Product);

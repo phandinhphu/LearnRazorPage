@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using WebAppTest.Authorization.Product_Requirements;
 using WebAppTest.Data;
 using WebAppTest.Models;
 using WebAppTest.Services.Intefaces;
@@ -18,12 +19,17 @@ namespace WebAppTest.Admin.Pages_Product
     public class EditModel : PageModel
     {
         private readonly IProductService _productservice;
+        private readonly IAuthorizationService _authorizationService;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public EditModel(IWebHostEnvironment webHostEnvironment, IProductService productService)
+        public EditModel(
+            IWebHostEnvironment webHostEnvironment, 
+            IProductService productService,
+            IAuthorizationService authorizationService)
         {
             _webHostEnvironment = webHostEnvironment;
             _productservice = productService;
+            _authorizationService = authorizationService;
         }
 
         [BindProperty]
@@ -39,10 +45,21 @@ namespace WebAppTest.Admin.Pages_Product
             }
 
             var product =  await _productservice.GetProductByIdAsync(id.Value);
+
             if (product == null)
             {
                 return NotFound();
             }
+
+            // Check if the user is authorized to edit the product
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, product, new ProductOwnerRequirement());
+            
+            if (!authorizationResult.Succeeded)
+            {
+                // Redirect to an access denied page or show an error message
+                return Forbid();
+            }
+
             Product = product;
             return Page();
         }

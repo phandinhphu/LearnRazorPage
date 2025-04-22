@@ -39,49 +39,36 @@
         </div>
 
         <div class="home-product mgt-12">
-            @await Component.InvokeAsync("ProductBox", new { CategoryID = Model.CategoryID, QuerySearch = Model.QuerySearch, sort = true })
+            @await Component.InvokeAsync("ProductBox", new { 
+                    Products = Model.Products,
+                    sort = true 
+                })
         </div>
 
         <ul class="pagination home-product__pagination">
-            <li class="pagination-item">
-                <a href="#" class="pagination-item__link">
-                    <i class="pagination-item__icon fas fa-angle-left"></i>
-                </a>
-            </li>
+            @if (Model.Products.HasPreviousPage) {
+                <li class="pagination-item">
+                    <a asp-route-PageIndex="@(Model.PageIndex-1)" class="pagination-item__link">
+                        <i class="pagination-item__icon fas fa-angle-left"></i>
+                    </a>
+                </li>
+            }
 
-            <li class="pagination-item pagination-item--active">
-                <a href="#" class="pagination-item__link">1</a>
-            </li>
+            @for (int i = 1; i <= Model.Products.TotalPages; i++)
+            {
+                <li class="pagination-item pagination-item--active">
+                    <a asp-route-PageIndex="@i" class="pagination-item__link">@i</a>
+                </li>
+            }
 
-            <li class="pagination-item">
-                <a href="#" class="pagination-item__link">2</a>
-            </li>
-
-            <li class="pagination-item">
-                <a href="#" class="pagination-item__link">3</a>
-            </li>
-
-            <li class="pagination-item">
-                <a href="#" class="pagination-item__link">4</a>
-            </li>
-
-            <li class="pagination-item">
-                <a href="#" class="pagination-item__link">5</a>
-            </li>
-
-            <li class="pagination-item">
-                <a href="#" class="pagination-item__link">...</a>
-            </li>
-
-            <li class="pagination-item">
-                <a href="#" class="pagination-item__link">14</a>
-            </li>
-
-            <li class="pagination-item">
-                <a href="#" class="pagination-item__link">
-                    <i class="pagination-item__icon fas fa-angle-right"></i>
-                </a>
-            </li>
+            @if (Model.Products.HasNextPage)
+            {
+                <li class="pagination-item">
+                    <a asp-route-PageIndex="@(Model.PageIndex+1)" class="pagination-item__link">
+                        <i class="pagination-item__icon fas fa-angle-right"></i>
+                    </a>
+                </li>
+            }
         </ul>
     </div>
 </div>

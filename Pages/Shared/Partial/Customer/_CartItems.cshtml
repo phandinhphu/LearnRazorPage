@@ -1,0 +1,24 @@
+﻿@using WebAppTest.Models
+@model List<CartItem>
+
+<div class="navbar__cart-list">
+    @if (Model?.Any() == true) {
+        <h4 class="navbar__cart-heading">Sản phẩm đã thêm</h4>
+        <ul class="navbar__cart-list-item">
+            <!-- Card item -->
+            @foreach (var item in Model)
+            {
+                <partial name="Partial/Customer/_CartItem" model="item" />
+            }
+        </ul>
+
+        <a href="" class="navbar__cart-view-cart btn btn--primary">Xem giỏ hàng</a>
+    } 
+    else
+    {
+        <img src="~/img/No-cart.jpg"
+             alt="No cart"
+             class="navbar__cart-no-cart-img" />
+        <p class="navbar__cart-list-no-cart-msg">Chưa có sản phẩm</p>
+    }
+</div>

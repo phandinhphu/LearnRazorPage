@@ -8,6 +8,6 @@ namespace WebAppTest.Models
     [Table("Users")]
     public class User : IdentityUser
     {
-        
+        public ICollection<Product>? Products { get; set; }
     }
 }

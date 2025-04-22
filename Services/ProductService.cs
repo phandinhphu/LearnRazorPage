@@ -2,8 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using WebAppTest.Data;
+using WebAppTest.Helpers;
 using WebAppTest.Models;
 using WebAppTest.Services.Intefaces;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace WebAppTest.Services
 {
@@ -81,18 +83,20 @@ namespace WebAppTest.Services
                     .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Product>> GetProductsAsync(string name = "")
+        public async Task<PaginatedList<Product>> GetProductsAsync(int? categoryID, string name = "", int pageIndex = 1, int pageSize = 20)
         {
-            if (string.IsNullOrEmpty(name))
+            var query = _context.Products.AsQueryable();
+            if (!string.IsNullOrEmpty(name))
             {
-                return await _context.Products.Include(p => p.Category).ToListAsync();
+                query = _context.Products.Where(p => p.Name.ToLower().Contains(name.ToLower())).AsQueryable();
             }
 
-            var products = from p in _context.Products
-                           where p.Name.Contains(name)
-                           select p;
+            if (categoryID.HasValue && categoryID > 0)
+            {
+                query = query.Where(p => p.CategoryId == categoryID);
+            }
 
-            return await products.Include(p => p.Category).ToListAsync();
+            return await PaginatedList<Product>.Create(query, pageIndex, pageSize);
         }
 
         public async Task<IEnumerable<Product>> GetProductsByCategoryAsync(int id = 0)

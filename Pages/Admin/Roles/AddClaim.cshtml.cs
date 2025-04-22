@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
@@ -6,6 +7,7 @@ using System.Security.Claims;
 
 namespace WebAppTest.Admin.Pages_Roles
 {
+    [Authorize(Policy = "Admin")]
     public class AddClaimModel : PageModel
     {
         private readonly RoleManager<IdentityRole> _roleManager;

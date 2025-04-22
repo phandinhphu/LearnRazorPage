@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using WebAppTest.Services.Intefaces;
 
 namespace WebAppTest.Admin.Pages_Product
 {
+    [Authorize(Policy = "Admin")]
     public class IndexModel : PageModel
     {
         private readonly IProductService _productService;
@@ -20,6 +22,8 @@ namespace WebAppTest.Admin.Pages_Product
         public string QueryString { get; set; } = string.Empty;
         [BindProperty(SupportsGet = true)]
         public string TypeSearch { get; set; } = string.Empty;
+        [BindProperty(SupportsGet = true)]
+        public int PageIndex { get; set; } = 1;
 
         public IndexModel(IProductService productService)
         {
@@ -36,7 +40,7 @@ namespace WebAppTest.Admin.Pages_Product
                     Product = (await _productService.GetProductsByCategoryAsync(0)).ToList();
                     break;
                 default:
-                    Product = (await _productService.GetProductsAsync(QueryString)).ToList();
+                    Product = (await _productService.GetProductsAsync(0, QueryString, PageIndex)).ToList();
                     break;
             }
 

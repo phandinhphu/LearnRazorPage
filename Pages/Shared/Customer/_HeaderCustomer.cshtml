@@ -1,12 +1,15 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Authorization
+@using WebAppTest.Extensions
 @using WebAppTest.Models
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 @inject IAuthorizationService AuthorizationService
+@inject IHttpContextAccessor HttpContextAccessor
 @{
     var isAdmin = AuthorizationService.AuthorizeAsync(User, "Admin").Result;
     var CategoryID = Context.Request.Query["CategoryID"];
+    var carts = HttpContextAccessor.HttpContext.Session.GetObjectFromJson<List<CartItem>>("cart") ?? new List<CartItem>();
 }
 
 <header class="header">
@@ -246,96 +249,12 @@
             <div class="navbar__cart">
                 <div class="navbar__cart-wrap">
                     <i class="navbar__cart-icon fa-solid fa-cart-shopping"></i>
-                    <span class="navbar__cart-notice">3</span>
+                    <span class="navbar__cart-notice">
+                        @carts.Count
+                    </span>
 
                     <!-- No cart: header__cart-list--no-cart -->
-                    <div class="navbar__cart-list">
-                        <img src="./assets/img/No-cart.jpg"
-                             alt="No cart"
-                             class="navbar__cart-no-cart-img" />
-                        <p class="navbar__cart-list-no-cart-msg">Chưa có sản phẩm</p>
-
-                        <h4 class="navbar__cart-heading">Sản phẩm đã thêm</h4>
-                        <ul class="navbar__cart-list-item">
-                            <!-- Card item -->
-                            <li class="navbar__cart-item">
-                                <img src="./assets/img/Ohui/ohui3.jpg"
-                                     alt=""
-                                     class="navbar__cart-img" />
-                                <div class="navbar__cart-item-info">
-                                    <div class="navbar__cart-item-head">
-                                        <h5 class="navbar__cart-item-name">
-                                            Bộ kem đặc trị vùng mắt
-                                        </h5>
-                                        <div class="navbar__cart-item-price-wrap">
-                                            <span class="navbar__cart-item-price">2.000.000đ</span>
-                                            <span class="navbar__cart-item-multiply">x</span>
-                                            <span class="navbar__cart-item-quantity">2</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="navbar__cart-item-body">
-                                        <span class="navbar__cart-item-description">
-                                            Phân loại: Bạc
-                                        </span>
-                                        <span class="navbar__cart-item-remove">Xoá</span>
-                                    </div>
-                                </div>
-                            </li>
-
-                            <li class="navbar__cart-item">
-                                <img src="./assets/img/Ohui/Ohui2.jfif"
-                                     alt=""
-                                     class="navbar__cart-img" />
-                                <div class="navbar__cart-item-info">
-                                    <div class="navbar__cart-item-head">
-                                        <h5 class="navbar__cart-item-name">
-                                            Bộ kem đặc trị vùng mắt
-                                        </h5>
-                                        <div class="navbar__cart-item-price-wrap">
-                                            <span class="navbar__cart-item-price">3.000.000đ</span>
-                                            <span class="navbar__cart-item-multiply">x</span>
-                                            <span class="navbar__cart-item-quantity">2</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="navbar__cart-item-body">
-                                        <span class="navbar__cart-item-description">
-                                            Phân loại: Bạc
-                                        </span>
-                                        <span class="navbar__cart-item-remove">Xoá</span>
-                                    </div>
-                                </div>
-                            </li>
-
-                            <li class="navbar__cart-item">
-                                <img src="./assets/img/Ohui/ohui4.jpg"
-                                     alt=""
-                                     class="navbar__cart-img" />
-                                <div class="navbar__cart-item-info">
-                                    <div class="navbar__cart-item-head">
-                                        <h5 class="navbar__cart-item-name">
-                                            Bộ kem đặc trị vùng mắt
-                                        </h5>
-                                        <div class="navbar__cart-item-price-wrap">
-                                            <span class="navbar__cart-item-price">2.500.000đ</span>
-                                            <span class="navbar__cart-item-multiply">x</span>
-                                            <span class="navbar__cart-item-quantity">3</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="navbar__cart-item-body">
-                                        <span class="navbar__cart-item-description">
-                                            Phân loại: Bạc
-                                        </span>
-                                        <span class="navbar__cart-item-remove">Xoá</span>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-
-                        <a href="" class="navbar__cart-view-cart btn btn--primary">Xem giỏ hàng</a>
-                    </div>
+                    <partial name="Partial/Customer/_CartItems" model="carts" />
                 </div>
             </div>
         </div>

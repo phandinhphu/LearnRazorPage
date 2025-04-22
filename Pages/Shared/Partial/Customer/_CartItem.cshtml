@@ -1,0 +1,59 @@
+﻿@using System.Text.Json
+@using WebAppTest.Models
+
+@model CartItem
+@{
+    var imgs = JsonSerializer.Deserialize<List<string>>(Model.ProductImage);
+}
+
+<li class="navbar__cart-item">
+    <img src="~/@imgs[0]"
+         alt=""
+         class="navbar__cart-img" />
+    <div class="navbar__cart-item-info">
+        <div class="navbar__cart-item-head">
+            <h5 class="navbar__cart-item-name">
+                @Model.ProductName
+            </h5>
+            <div class="navbar__cart-item-price-wrap">
+                <span class="navbar__cart-item-price">@Model.ProductPrice.ToString("N0") đ</span>
+                <span class="navbar__cart-item-multiply">x</span>
+                <span class="navbar__cart-item-quantity">@Model.Quantity</span>
+            </div>
+        </div>
+
+        <div class="navbar__cart-item-body">
+            <span class="navbar__cart-item-description">
+                Category: @Model.CategoryName
+            </span>
+            <span class="navbar__cart-item-remove" data-product-id="@Model.ProductId">Xoá</span>
+        </div>
+    </div>
+</li>
+
+<script>
+    document.querySelector('.navbar__cart-list-item').addEventListener('click', function (e) {
+        if (e.target.classList.contains('navbar__cart-item-remove')) {
+            const productId = e.target.dataset.productId;
+            const cartItem = e.target.closest('.navbar__cart-item');
+
+            fetch(`/api/Carts/${productId}`, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to delete item");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Cart after delete:", data);
+                    cartItem.remove();
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+        }
+    });
+
+</script>

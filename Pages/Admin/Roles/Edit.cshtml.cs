@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using WebAppTest.Data;
 
 namespace WebAppTest.Admin.Pages_Roles
 {
+    [Authorize(Policy = "Admin")]
     public class EditModel : PageModel
     {
         private readonly RoleManager<IdentityRole> _roleManager;

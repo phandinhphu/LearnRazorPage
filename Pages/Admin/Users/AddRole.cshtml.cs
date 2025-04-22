@@ -6,6 +6,7 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -15,6 +16,7 @@ using WebAppTest.Models;
 
 namespace WebAppTest.Admin.Pages_Users
 {
+    [Authorize(Roles = "Admin")]
     public class AddRoleModel : PageModel
     {
         private readonly UserManager<User> _userManager;
