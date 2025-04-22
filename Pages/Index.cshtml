@@ -8,6 +8,7 @@
 
     var categories = CategoryService.GetCategoriesAsync().Result.ToList();
 }
+
 <div class="row">
     <div class="col l-2 m-0 c-0">
         <partial name="Partial/Customer/_ListCategories" model="categories" />

@@ -157,6 +157,19 @@ namespace WebAppTest.Areas.Identity.Pages.Account
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
 
+                // if user exists, add link to that user
+                var userExists = await _userManager.FindByEmailAsync(Input.Email);
+                if (userExists != null)
+                {
+                    var resultLink = await _userManager.AddLoginAsync(userExists, info);
+                    if (resultLink.Succeeded)
+                    {
+                        _logger.LogInformation("User linked an account using {Name} provider.", info.LoginProvider);
+                        await _signInManager.SignInAsync(userExists, isPersistent: false, info.LoginProvider);
+                        return LocalRedirect(returnUrl);
+                    }
+                }
+
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

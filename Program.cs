@@ -10,6 +10,9 @@ using WebAppTest.Services.Intefaces;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Authorization;
 using WebAppTest.Authorization.Product_Requirements;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 var mailSettings = builder.Configuration.GetSection("MailSettings");
@@ -55,6 +58,44 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true; // Kích hoạt tính năng gia hạn thời gian hết hạn cookie
     options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Thời gian hết hạn cookie
 });
+
+// Xác thực bằng dịch vụ bên thứ ba (Google, Facebook, v.v.)
+builder.Services.AddAuthentication()
+    .AddGoogle(option =>
+    {
+        var g = builder.Configuration.GetSection("Authentication:Google");
+        option.ClientId = g["ClientId"] ?? throw new InvalidOperationException("Google ClientId is not configured.");
+        option.ClientSecret = g["ClientSecret"] ?? throw new InvalidOperationException("Google ClientSecret is not configured.");
+        option.CallbackPath = "/dang-nhap-tu-google";
+        option.ClaimActions.MapJsonKey("picture", "picture", "url");
+
+        option.Events.OnCreatingTicket = ctx =>
+        {
+            var picture = ctx.User.GetProperty("picture").GetString();
+            if (picture != null)
+            {
+                ctx.Identity?.AddClaim(new Claim("picture", picture));
+            }
+            return Task.CompletedTask;
+        };
+    })
+    .AddFacebook(option =>
+    {
+        var f = builder.Configuration.GetSection("Authentication:Facebook");
+        option.AppId = f["AppId"] ?? throw new InvalidOperationException("Facebook AppId is not configured.");
+        option.AppSecret = f["AppSecret"] ?? throw new InvalidOperationException("Facebook AppSecret is not configured.");
+        option.CallbackPath = "/dang-nhap-tu-facebook";
+        option.Fields.Add("picture"); // yêu cầu thêm thông tin ảnh
+        option.Events.OnCreatingTicket = ctx =>
+        {
+            var picture = ctx.User.GetProperty("picture").GetProperty("data").GetProperty("url").GetString();
+            if (picture != null)
+            {
+                ctx.Identity?.AddClaim(new Claim("picture", picture));
+            }
+            return Task.CompletedTask;
+        };
+    });
 
 // Policy xác thực
 builder.Services.AddAuthorization(options =>
@@ -110,6 +151,7 @@ builder.Services.Configure<IdentityOptions>(options => {
 
     // Cấu hình đăng nhập.
     options.SignIn.RequireConfirmedEmail = false;            // Cấu hình xác thực địa chỉ email (email phải tồn tại)
+    options.SignIn.RequireConfirmedAccount = false;         // Cấu hình xác thực tài khoản (tài khoản phải tồn tại)
     options.SignIn.RequireConfirmedPhoneNumber = false;     // Xác thực số điện thoại
 
 });
